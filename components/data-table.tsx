@@ -26,6 +26,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Dialog } from "./ui/dialog";
+import { CreateChildDialog } from "./create-child";
 
 type DataTableItem = {
   id: number;
@@ -67,10 +69,7 @@ export default function DataTable({ data }: DataTableProps) {
       {/* Top Actions */}
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">Manage Children</h2>
-        <Button>
-          <Plus />
-          Add Child
-        </Button>
+          <CreateChildDialog/>
       </div>
 
       {/* Table */}
