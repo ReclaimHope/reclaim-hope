@@ -1,19 +1,32 @@
 import ChildCard from "./ChildCard";
+export interface Child {
+  id: string;
+  name: string;
+  age: number;
+  dream: string;
+  image: string;
+  summary: string;
+  story: string[];
 
-export const children = [
+  support?: string;
+  goals?: string[];
+  needs?: string[];
+  updates?: string[];
+  sponsorshipImpact?: string;
+}
+
+export const children: Child[] = [
   {
-    id: "aline",
-    name: "Aline",
-    age: 10,
-    dream: "a nurse",
+    id: "Matambi",
+    name: "Matambi",
+    age: 17,
+    dream: "makeup artist",
     support: "education and school materials",
-    image: "/aline.png",
+    image: "/Matambi.jpg",
     summary:
-      "Aline is a bright and determined learner who dreams of becoming a nurse and serving her community.",
+      "Shakira is the youngest of three children and lives with her mother, who works as a security guard to support the family.",
     story: [
-      "Aline enjoys science, reading books, and helping younger children in her community.",
-      "She consistently performs well in school despite facing financial challenges.",
-      "With continued support, she can remain focused on her education and future goals."
+      "Shakira is the youngest of three children and lives with her mother, who works as a security guard to provide for the family. A Senior 4 student at Sainte Marie Reine, Shakira has a real flair for beauty and salon arts, and dreams of training as a professional makeup artist. With your sponsorship, Shakira receives school fees and supplies, health insurance, nutritious meals, and ongoing mentorship — the support she needs to turn her talent into a thriving career."
     ],
     goals: [
       "Complete primary education",
@@ -34,237 +47,221 @@ export const children = [
     sponsorshipImpact:
       "Your sponsorship helps provide education, nutrition, mentorship, and opportunities for long-term growth."
   },
+  // {
+  //   id: "Salim",
+  //   name: "Salim Cyizere",
+  //   Age: 18,
+  //   dream: "Chef",
+  //   image: "/Salim.jpg",
+  //   summary: "Salim is the eldest of five children. He lost his mother four years ago and now lives with his father and grandparents, who support the family through part-time work.",
+  //   story: [
+  //     "Salim is the eldest of five children. He lost his mother four years ago and now lives with his father and grandparents, who do their best on part-time work to keep the family going. At GS Cyahafi, Salim is training in Food & Beverage Operations, working toward his dream of becoming a professional chef — and when he's not in the kitchen, you'll find him on the football field, doing what he loves most. Sponsorship gives Salim school fees and supplies, health insurance, nutritious meals, and mentorship to help him reach his goal."
+  //   ],
+
+
+  // },
   {
-    id: "kevin",
-    name: "Kevin",
-    age: 12,
-    dream: "an engineer",
-    support: "tuition and mentorship",
-    image: "/education.png",
-    summary:
-      "Kevin loves solving problems, building models, and dreaming of the day he can engineer solutions for his community.",
+    id: "Aliane",
+    name: "Aliane Cyuzuzo",
+    age: 18,
+    dream: "business woman",
+    image: "/Aliane.jpg",
+    summary: "Aliane lives with her father and stepmother in a household of seven children, supported by her father's part-time work.",
     story: [
-      "Kevin is curious about science and technology, and he enjoys working with his hands.",
-      "He studies hard to overcome the financial barriers that make school attendance difficult.",
-      "With the right support, he can continue learning and prepare for a future in engineering."
-    ],
-    goals: [
-      "Complete middle school",
-      "Develop strong math and science skills",
-      "Study engineering or technology"
-    ],
-    needs: [
-      "Tuition support",
-      "School supplies",
-      "Mentorship and tutoring",
-      "Safe study space"
-    ],
-    updates: [
-      "Improved grades in math",
-      "Participated in a local science club",
-      "Built a school project with pride"
-    ],
-    sponsorshipImpact:
-      "Your sponsorship provides the resources and guidance Kevin needs to grow his talents and keep going to school."
+      "Aliane lives with her father and stepmother in a busy household of seven children, supported by her father's part-time work. She's a Senior 5 student in the MCE combination at ES Rugabano, with a clear ambition to become a successful businesswoman one day. Music is her joy — she loves to sing and is rarely without a song playing nearby. Through sponsorship, Aliane receives school fees and supplies, health insurance, nutritious meals, and mentorship to help her build the future she's working toward."
+    ]
   },
   {
-    id: "grace",
-    name: "Grace",
-    age: 9,
-    dream: "a teacher",
-    support: "nutrition and school support",
-    image: "/LEAD.png",
-    summary:
-      "Grace is compassionate and loves helping her classmates, and she dreams of becoming a teacher who inspires others.",
-    story: [
-      "Grace is always eager to read and share stories with younger children.",
-      "Her family struggles to provide enough food, but she keeps showing up to school with a smile.",
-      "With stable support, Grace can continue her education and reach her dream of teaching."
-    ],
-    goals: [
-      "Stay in school",
-      "Improve reading and writing skills",
-      "Become a caring teacher"
-    ],
-    needs: [
-      "Balanced meals",
-      "School supplies",
-      "Uniforms and transport",
-      "Learning support"
-    ],
-    updates: [
-      "Increased classroom participation",
-      "Helped younger children during reading time",
-      "Maintained excellent attendance"
-    ],
-    sponsorshipImpact:
-      "Your sponsorship helps Grace stay healthy and focused so she can become a strong learner and future mentor."
-  },
-  {
-    id: "emmanuel",
-    name: "Emmanuel",
+    id: "Louange",
+    name: "Louange Igihozo",
     age: 11,
-    dream: "a doctor",
-    support: "education and meals",
-    image: "/healthy.png",
-    summary:
-      "Emmanuel cares deeply about people and dreams of becoming a doctor who helps families in his community.",
+    dream: "Soldier",
+    image: "/Louange.jpg",
+    summary: "Louange is the youngest of three children and lives with both of her parents.",
     story: [
-      "Emmanuel is driven by a desire to see children stay healthy and attend school.",
-      "He studies hard despite food insecurity at home and remains optimistic about his future.",
-      "With consistent support, he can keep learning and work toward his dream career in medicine."
-    ],
-    goals: [
-      "Complete school successfully",
-      "Grow in science knowledge",
-      "Train to be a medical professional"
-    ],
-    needs: [
-      "Regular nutritious meals",
-      "Academic support",
-      "School fees",
-      "Health education"
-    ],
-    updates: [
-      "Kept top marks in science",
-      "Volunteered in school health campaigns",
-      "Committed to improving his community"
-    ],
-    sponsorshipImpact:
-      "Your sponsorship gives Emmanuel the stability and educational foundation he needs to pursue a future in healthcare."
+      "Louange is the youngest of three children and lives with both of her parents. She's in Primary 6 at EP Ntwali, working hard to prepare for her national examination this year. Outside the classroom, she loves art and craft, and she's set her sights on a bold dream — becoming a soldier when she grows up. Sponsorship supports Louange with school fees and supplies, health insurance, nutritious meals, and mentorship as she works toward this important exam and beyond."
+    ]
   },
   {
-    id: "Keza",
-    name: "Keza",
+    id: "Chancerine",
+    name: "Chancerine Izuwayo",
+    age: 16,
+    dream: "Company manager",
+    image: "/Chanceline.jpg",
+    summary: "Chanceline is the youngest of five children and lives with her mother, who works on other people's farms to provide for the family.",
+    story: [
+      "Chanceline is the youngest of five children and lives with her mother, who works on other people's farms to provide for the family. She's in Primary 5 at GS Cyivugiza and has a gift for art and craft, especially weaving. Chanceline dreams big — she wants to become a company manager when she grows up. Sponsorship provides Chanceline with school fees and supplies, health insurance, nutritious meals, and mentorship to help her build the skills she'll need to lead."
+    ]
+  },
+  {
+    id: "Radju",
+    name: "Radju Foranny Kwizera",
+    age: 15,
+    dream: "Football/soccer player",
+    image: "/Raju.jpg",
+    summary: "Radju is one of five children. He lost his mother four years ago and now lives with his father and grandmother, who works part-time jobs to keep the family afloat.",
+    story: [
+      "Radju is one of five children. He lost his mother four years ago and now lives with his father and grandmother, who works part-time jobs to keep the family afloat. He's in Primary 6 at GS Cyivugiza, preparing for his national examination, and his favorite way to unwind is on the football pitch — he dreams of becoming a professional football player. Sponsorship supports Radju with school fees and supplies, health insurance, nutritious meals, and mentorship through this important exam year."
+    ]
+  },
+  {
+    id: "Raoul",
+    name: "Raoul Mugisha",
+    age: 18,
+    dream: "Electrical engineer",
+    image: "/Raoul.jpg",
+    summary: "Raoul is one of seven children and lives with both of his parents, with his father taking on part-time work to support the family.",
+    story: [
+      "Raoul is one of seven children and lives with both of his parents, with his father taking on part-time work to support the family. He's in Level 3, studying Electrical Technology at GS Akumunigo TSS, and is determined to become an electrical engineer. Music runs through him too — he loves playing the drums in his free time. Sponsorship helps Raoul with school fees and supplies, health insurance, nutritious meals, and mentorship as he trains for his future career."
+    ]
+  },
+  {
+    id: "Beline",
+    name: "Beline Niyonkuru",
+    age: 18,
+    dream: "Bank Manager",
+    image: "/Beline.jpg",
+    summary: "Beline is the youngest of four children and lives with both of her parents, who work part-time jobs to support the family.",
+    story: [
+      "Beline is the youngest of four children and lives with both of her parents, who work part-time jobs to support the family. She's a Senior 5 student in the Math-Economics-Geography (MEG) combination at Sainte Marie Reine, with her sights set on a career as a bank manager. Outside her studies, Beline loves traditional dance and the culture behind it. Sponsorship gives Beline school fees and supplies, health insurance, nutritious meals, and mentorship as she works toward a future in finance."
+    ]
+  },
+  {
+    id: "Yvan",
+    name: "Yvan Rucogoza",
+    age: 18,
+    dream: "Traditional dancer",
+    image: "/Yvan.jpg",
+    summary: "Yvan lives with both of his parents in a family of seven children. His father works as a security guard at a bank.",
+    story: [
+      "Yvan lives with both of his parents in a family of seven children. His father works as a security guard at a bank to provide for everyone. At Auto Ecole Ste Famille VTC, Yvan is training in Level 3 Mechanics, building practical skills for his future career. He's also a gifted traditional dancer and lights up whenever there's a chance to perform. Sponsorship supports Yvan with school fees, school supplies, health insurance, nutritious meals, and mentorship as he completes his technical training."
+    ]
+
+  },
+  {
+    id: "Cezar",
+    name: "Kenny Cezar Uwiragiye",
+    age: 13,
+    dream: "Judge",
+    image: "/Cesar.jpg",
+    summary: "Kenny Cezar lives with his mother in a family of seven children.",
+    story: [
+      "Kenny Cezar lives with his mother in a family of seven children. He's in Primary 6 at GS Cyivugiza, preparing for his national examination, and has set his heart on becoming a judge one day. Traditional dance is his favorite way to spend free time, and he rarely misses a chance to perform. Sponsorship gives Kenny Cezar school fees, school supplies, health insurance, nutritious meals, and mentorship through this critical exam year."
+    ]
+  },
+  {
+    id: "Assouman",
+    name: "Assouman Tugerageze",
+    age: 15,
+    dream: "Football/soccer player",
+    image: "/Assouman.jpg",
+    summary: "Assouman lives with both of his parents in a family of five children. His mother works as a cook at the Reclaim Hope Rwanda Center.",
+    story:
+      [
+        "Assouman lives with both of his parents in a family of five children. His mother works as a cook at the Reclaim Hope Rwanda Center. He's in Primary 5 at GS Cyivugiza and is an active member of his school's football club, where his passion for the game truly shows. Assouman dreams of becoming a professional football player. Sponsorship provides Assouman with school fees, school supplies, health insurance, nutritious meals, and mentorship to help him chase that dream."
+      ]
+  },
+  {
+    id: "Chance",
+    name: "Chance Umuhire",
+    age: 17,
+    dream: "Hotel Manager",
+    image: "/Chance.jpg",
+    summary: "Chance is the eldest of three children and lives with her mother, who takes on part-time work to support the family.",
+    story: [
+      "Chance is the eldest of three children and lives with her mother, who takes on part-time work to support the family. She's a Senior 5 student in the Languages (LFK) combination at GS Shyogwe, with a warm, people-first personality that shows in everything she does — she loves building good relationships with others. Chance dreams of becoming a hotel manager. Sponsorship gives Chance school fees, school supplies, health insurance, nutritious meals, and mentorship as she finishes secondary school."
+    ]
+  },
+  {
+    id: "Samuel",
+    name: "Samuel Umurerwa",
+    age: 16,
+    dream: "Software Developer",
+    image: "/Samuel.jpg",
+    summary: "Samuel lives with both of his parents, who do part-time work to support the family. He and his two siblings have faced real loss together as a family, but have remained close.",
+    story:[
+      "Samuel lives with both of his parents, who do part-time work to support the family. He and his two siblings have faced real loss together, but they've remained close. Samuel is in Senior 3 at GS Cyivugiza, preparing for his national examination, with a clear goal in mind — he wants to become a software developer. Sponsorship gives Samuel school fees, school supplies, health insurance, nutritious meals, and mentorship as he works toward that goal."
+    ]
+
+  },
+  {
+    id: "Sharapova",
+    name: "Sharapova Umwari",
     age: 10,
-    dream: "a nurse",
-    support: "education and school materials",
-    image: "/aline.png",
-    summary:
-      "Aline is a bright and determined learner who dreams of becoming a nurse and serving her community.",
+    dream: "Pilot",
+    image: "/Sharapova.jpg",
+    summary: "Sharapova is the youngest of five children. She lost her mother four years ago and now lives with her father and grandmother, supported by her father's part-time work.",
     story: [
-      "Aline enjoys science, reading books, and helping younger children in her community.",
-      "She consistently performs well in school despite facing financial challenges.",
-      "With continued support, she can remain focused on her education and future goals."
-    ],
-    goals: [
-      "Complete primary education",
-      "Excel in science subjects",
-      "Become a healthcare professional"
-    ],
-    needs: [
-      "School supplies",
-      "Tuition support",
-      "Nutritious meals",
-      "Mentorship"
-    ],
-    updates: [
-      "Promoted to next class",
-      "Joined leadership activities",
-      "Improved school attendance"
-    ],
-    sponsorshipImpact:
-      "Your sponsorship helps provide education, nutrition, mentorship, and opportunities for long-term growth."
+      "Sharapova is the youngest of five children. She lost her mother four years ago and now lives with her father and grandmother, supported by her father's part-time work. She's in Primary 3 at EP Gitega, and dance is where she truly shines — modern dance is her favorite. Sharapova has a big dream: she wants to become a pilot. Sponsorship gives Sharapova school fees, school supplies, health insurance, nutritious meals, and mentorship as she pursues that dream."
+    ]
   },
   {
-    id: "Ivan",
-    name: "Ivan",
-    age: 12,
-    dream: "an engineer",
-    support: "tuition and mentorship",
-    image: "/education.png",
-    summary:
-      "Ivan loves solving problems, building models, and dreaming of the day he can engineer solutions for his community.",
+    id: "Betty",
+    name: "Betty Usanase",
+    age: 16,
+    dream: "Makeup artist",
+    image: "/Betty.jpg",
+    summary: "Betty is the youngest of four children and lives with both of her parents, who do part-time work to provide for the family.",
     story: [
-      "Ivan is curious about science and technology, and he enjoys working with his hands.",
-      "He studies hard to overcome the financial barriers that make school attendance difficult.",
-      "With the right support, he can continue learning and prepare for a future in engineering."
-    ],
-    goals: [
-      "Complete middle school",
-      "Develop strong math and science skills",
-      "Study engineering or technology"
-    ],
-    needs: [
-      "Tuition support",
-      "School supplies",
-      "Mentorship and tutoring",
-      "Safe study space"
-    ],
-    updates: [
-      "Improved grades in math",
-      "Participated in a local science club",
-      "Built a school project with pride"
-    ],
-    sponsorshipImpact:
-      "Your sponsorship provides the resources and guidance Ivan needs to grow his talents and keep going to school."
+      "Betty is the youngest of four children and lives with both of her parents, who do part-time work to provide for the family. She's a Senior 4 student in the MS2 combination at Ecole Sainte Bernadette, and her passion lies in beauty — she loves doing makeup for others and dreams of becoming a professional makeup artist. Sponsorship gives Betty school fees, school supplies, health insurance, nutritious meals, and mentorship as she builds toward that career."
+    ]
   },
   {
-    id: "Faith",
-    name: "Faith",
+    id: "Ornella",
+    name: "Ornella Usanase",
     age: 9,
-    dream: "a teacher",
-    support: "nutrition and school support",
-    image: "/LEAD.png",
-    summary:
-      "Faith is compassionate and loves helping her classmates, and she dreams of becoming a teacher who inspires others.",
+    dream: "Soldier",
+    image: "/Ornella.jpg",
+    summary: "Ornella lives with both of her parents in a family of seven children, supported by her parents' part-time work.",
     story: [
-      "Faith is always eager to read and share stories with younger children.",
-      "Her family struggles to provide enough food, but she keeps showing up to school with a smile.",
-      "With stable support, Faith can continue her education and reach her dream of teaching."
-    ],
-    goals: [
-      "Stay in school",
-      "Improve reading and writing skills",
-      "Become a caring teacher"
-    ],
-    needs: [
-      "Balanced meals",
-      "School supplies",
-      "Uniforms and transport",
-      "Learning support"
-    ],
-    updates: [
-      "Increased classroom participation",
-      "Helped younger children during reading time",
-      "Maintained excellent attendance"
-    ],
-    sponsorshipImpact:
-      "Your sponsorship helps Faith stay healthy and focused so she can become a strong learner and future mentor."
+      "Ornella lives with both of her parents in a family of seven children, supported by her parents' part-time work. She's in Primary 4 at GS Cyivugiza, and loves nothing more than playing with her friends after school. Ornella has a bold ambition — she wants to become a soldier when she grows up. Sponsorship gives Ornella school fees, school supplies, health insurance, nutritious meals, and mentorship to support her along the way."
+    ]
   },
   {
-    id: "Fred",
-    name: "Fred",
-    age: 11,
-    dream: "a doctor",
-    support: "education and meals",
-    image: "/healthy.png",
-    summary:
-      "Fred cares deeply about people and dreams of becoming a doctor who helps families in his community.",
+    id: "Kennedy",
+    name: "Ganza Kennedy Uwimana",
+    image: "/Kennedy.jpg",
+    age: 8,
+    dream: "Soldier",
+    summary: "Ganza is the eldest of two children and lives with both of his parents. His mother works as a cleaner at the Reclaim Hope Rwanda Center.",
     story: [
-      "Fred is driven by a desire to see children stay healthy and attend school.",
-      "He studies hard despite food insecurity at home and remains optimistic about his future.",
-      "With consistent support, he can keep learning and work toward his dream career in medicine."
-    ],
-    goals: [
-      "Complete school successfully",
-      "Grow in science knowledge",
-      "Train to be a medical professional"
-    ],
-    needs: [
-      "Regular nutritious meals",
-      "Academic support",
-      "School fees",
-      "Health education"
-    ],
-    updates: [
-      "Kept top marks in science",
-      "Volunteered in school health campaigns",
-      "Committed to improving his community"
-    ],
-    sponsorshipImpact:
-      "Your sponsorship gives Fred the stability and educational foundation he needs to pursue a future in healthcare."
+      "Ganza is the eldest of two children and lives with both of his parents. His mother works as a cleaner at the Reclaim Hope Rwanda Center. He's in Primary 3 at GS Cyivugiza, and football is his favorite pastime. Ganza dreams of becoming a soldier when he grows up. Sponsorship gives Ganza school fees, school supplies, health insurance, nutritious meals, and mentorship to support his education."
+    ]
+  },
+  {
+    id: "Innocent",
+    name: "Innocent Uwimana",
+    age: 18,
+    dream: "Football/soccer player",
+    image: "/Innocent.jpg",
+    summary: "Innocent is one of six children. Both of his parents have passed away, and he is now cared for by a guardian.",
+    story: [
+      "Innocent is one of six children. Both of his parents have passed away, and he is now cared for by a guardian. He is training in Level 3 Mechanics at Auto Ecole Ste Famille VTC, building hands-on skills for his future, and football is where he loves to spend his free time. Sponsorship gives Innocent school fees, school supplies, health insurance, nutritious meals, and mentorship as he completes his training."
+    ]
+  },
+  {
+    id: "Baptiste",
+    name: "Jean Baptiste Uwituze",
+    age: 13,
+    dream: "Football/soccer player",
+    image: "/Baptise.jpg",
+    summary: "Jean Baptiste lives with both of his parents in a family of three children, supported by his parents' part-time work.",
+    story: [
+      "Jean Baptiste lives with both of his parents in a family of three children, supported by his parents' part-time work. He's in Senior 1 at GS Cyivugiza, and football is at the center of his world — he dreams of becoming a professional football player. Sponsorship gives Jean Baptiste school fees, school supplies, health insurance, nutritious meals, and mentorship as he begins secondary school."
+    ]
+  },
+  {
+    id: "Munezero",
+    name: "Fabienne Munezero",
+    age: 8,
+    dream: "Teacher",
+    image: "/Munezero.jpg",
+    summary: "Fabienne is the youngest of five children and lives with both of her parents. Her mother works as a cook at the Reclaim Hope Rwanda Center.",
+    story: [
+      "Fabienne is the youngest of five children and lives with both of her parents. Her mother works as a cook at the Reclaim Hope Rwanda Center. A Primary 4 student at EP Ntwali, Fabienne lights up whenever modern dance music comes on — it's her favorite way to express herself. She dreams of becoming a teacher when she grows up. Sponsorship provides Fabienne with school fees and supplies, health insurance, nutritious meals, and mentorship to support her education."
+    ]
   }
+
 ];
 
 type ChildGridProps = {

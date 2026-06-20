@@ -6,7 +6,7 @@ const programs = [
   {
     slug: "lead-after-school-program",
     title: "LEAD / After School Program",
-    image: "/LEAD.png",
+    image: "/Programs 3.JPG",
     category: "Education & Leadership",
     summary:
       "A mentorship and tutoring program that helps children build academic confidence, leadership skills, and a sense of belonging.",
@@ -27,7 +27,7 @@ const programs = [
   {
     slug: "healthy-child-program",
     title: "Healthy Child",
-    image: "/healthy.png",
+    image: "/Programs 4.jpg",
     category: "Nutrition & Wellness",
     summary:
       "A holistic wellness initiative that supplies nutritious meals, health education, and hygiene support to underserved children.",
@@ -51,7 +51,7 @@ const programs = [
   {
     slug: "basic-needs-for-education",
     title: "Basic Needs for Education",
-    image: "/education.png",
+    image: "/Programs 2.JPG",
     category: "School Access",
     summary:
       "Providing the essential supplies and support children need to attend school and keep learning without interruption.",
@@ -72,7 +72,7 @@ const programs = [
   {
     slug: "skills-future-empowerment",
     title: "Skills & Future Empowerment",
-    image: "/empowerment.png",
+    image: "/Programs 7.jpg",
     category: "Vocational & Life Skills",
     summary:
       "Training programs that equip youth with practical skills, digital literacy, and career confidence for tomorrow’s opportunities.",
@@ -93,7 +93,7 @@ const programs = [
   {
     slug: "tallent-development",
     title: "Talent Development",
-    image: "/empowerment.png",
+    image: "/Programs 5.JPG",
     category: "Creative & Cultural Development",
     summary:
       "Supporting children’s talents through sports scholarships, traditional dance, singing, art and craft, and storytelling.",

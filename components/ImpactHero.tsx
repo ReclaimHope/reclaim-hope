@@ -3,7 +3,7 @@ export default function ImpactHero() {
         <section
             className="relative w-full h-[80vh] bg-cover bg-center flex items-center justify-center px-6 md:px-16 overflow-hidden"
             style={{
-                backgroundImage: "url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2hpbGRyZW4lMjBlZHVjYXRpb258ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60')",
+                backgroundImage: "url('/impact 4.jpg')",
             }}
         >
 

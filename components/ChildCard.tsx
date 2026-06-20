@@ -24,12 +24,12 @@ export default function ChildCard({
         active ? "border-yellow-500 ring-2 ring-yellow-100" : "border-gray-100"
       } hover:shadow-2xl hover:-translate-y-3 transition duration-500`}
     >
-      <div className="relative h-[170px] overflow-hidden">
+      <div className="relative h-[280px] sm:h-[320px] overflow-hidden">
         <Image
           src={image}
           alt={name}
           fill
-          className="object-cover group-hover:scale-105 transition duration-700"
+          className="object-cover object-center group-hover:scale-105 transition duration-700"
         />
       </div>
 

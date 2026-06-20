@@ -9,7 +9,7 @@ export default function ProgramsGrid() {
             id: 1,
             slug: "basic-needs-for-education",
             title: "Basic Needs for Education",
-            image: "/education.png",
+            image: "/Programs 2.JPG",
             description:
                 "Providing school materials, tuition support, uniforms, and educational essentials to help children access quality learning opportunities.",
         },
@@ -18,7 +18,7 @@ export default function ProgramsGrid() {
             id: 2,
             slug: "lead-after-school-program",
             title: "LEAD / After School Program",
-            image: "/LEAD.png",
+            image: "/Programs 3.JPG",
             description:
                 "Empowering children through mentorship, tutoring, leadership development, and after-school support activities.",
         },
@@ -27,7 +27,7 @@ export default function ProgramsGrid() {
             id: 3,
             slug: "healthy-child-program",
             title: "Healthy Child Program",
-            image: "/healthy.png",
+            image: "/Programs 4.jpg",
             description:
                 "Supporting child wellness through nutritious meals, health monitoring, hygiene education, and wellness initiatives.",
         },
@@ -36,7 +36,7 @@ export default function ProgramsGrid() {
             id: 4,
             slug: "skills-future-empowerment",
             title: "Skills & Future Empowerment",
-            image: "/empowerment.png",
+            image: "/Programs 7.jpg",
             description:
                 "Equipping youth with vocational training, digital literacy, and life skills that prepare them for future opportunities.",
         },
@@ -44,7 +44,7 @@ export default function ProgramsGrid() {
             id: 5,
             slug: "tallent-development",
             title: "Talent Development",
-            image: "/empowerment.png",
+            image: "/Programs 5.JPG",
             description:
                 "Supporting our children in sports, traditional dance, singing, art & craft, and storytelling so they keep growing in confidence.",
         },

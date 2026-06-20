@@ -11,25 +11,25 @@ export default function LeadershipSection() {
     const leaders = [
         {
             id: 1,
-            name: "John Doe",
+            name: "Philip Murari",
             role: "Executive Director",
-            image: "/team1.jpg",
+            image: "/Professional phil.png",
             bio: "Passionate about empowering underserved children through education and community development initiatives.",
         },
 
         {
             id: 2,
-            name: "Jane Smith",
-            role: "Program Coordinator",
-            image: "/team2.jpg",
+            name: "Cecile Uwumukiza",
+            role: "Executive Director",
+            image: "/Professional Cecile.jpeg",
             bio: "Focused on mentorship programs, youth empowerment, and creating sustainable community impact.",
         },
 
         {
             id: 3,
-            name: "David Wilson",
-            role: "Community Outreach Lead",
-            image: "/team3.jpg",
+            name: "Benefils Murengezi",
+            role: "Office Manager",
+            image: "/Professional Benefils.jpeg",
             bio: "Dedicated to strengthening community partnerships and expanding support initiatives across Rwanda.",
         },
     ];

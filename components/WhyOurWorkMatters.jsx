@@ -16,7 +16,7 @@ export default function WhyOurWorkMatters() {
                     <div className="relative overflow-hidden rounded-[40px] shadow-xl">
 
                         <Image
-                            src="/work-matters.jpg"
+                            src="/Programs 8.jpg"
                             alt="Children learning together"
                             width={700}
                             height={700}

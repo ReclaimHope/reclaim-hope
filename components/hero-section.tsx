@@ -4,10 +4,10 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const slides = [
-  "/hero-img.jpg",
-  "/aline.png",
-  "/sponsor-hero.png",
-  "/programs-hero.png",
+  "/Home 1.JPG",
+  "/Home 2.jpg",
+  "/Home 3.jpg",
+  "/Home 4.jpg",
 ];
 
 export default function HeroSection() {

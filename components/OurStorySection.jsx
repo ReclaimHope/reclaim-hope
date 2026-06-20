@@ -100,7 +100,7 @@ export default function OurStorySection() {
                         <div className="relative overflow-hidden rounded-[40px] shadow-xl">
 
                             <Image
-                                src="/mentors_kids.jpg"
+                                src="/Impact 1.jpg"
                                 alt="Our story"
                                 width={700}
                                 height={800}
