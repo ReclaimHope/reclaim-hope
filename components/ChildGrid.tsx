@@ -22,7 +22,7 @@ export const children: Child[] = [
     age: 17,
     dream: "makeup artist",
     support: "education and school materials",
-    image: "/Matambi.jpg",
+    image: "/Matambi.png",
     summary:
       "Shakira is the youngest of three children and lives with her mother, who works as a security guard to support the family.",
     story: [
@@ -65,7 +65,7 @@ export const children: Child[] = [
     name: "Aliane Cyuzuzo",
     age: 18,
     dream: "business woman",
-    image: "/Aliane.jpg",
+    image: "/Aliane.png",
     summary: "Aliane lives with her father and stepmother in a household of seven children, supported by her father's part-time work.",
     story: [
       "Aliane lives with her father and stepmother in a busy household of seven children, supported by her father's part-time work. She's a Senior 5 student in the MCE combination at ES Rugabano, with a clear ambition to become a successful businesswoman one day. Music is her joy — she loves to sing and is rarely without a song playing nearby. Through sponsorship, Aliane receives school fees and supplies, health insurance, nutritious meals, and mentorship to help her build the future she's working toward."
@@ -76,7 +76,7 @@ export const children: Child[] = [
     name: "Louange Igihozo",
     age: 11,
     dream: "Soldier",
-    image: "/Louange.jpg",
+    image: "/Louange.png",
     summary: "Louange is the youngest of three children and lives with both of her parents.",
     story: [
       "Louange is the youngest of three children and lives with both of her parents. She's in Primary 6 at EP Ntwali, working hard to prepare for her national examination this year. Outside the classroom, she loves art and craft, and she's set her sights on a bold dream — becoming a soldier when she grows up. Sponsorship supports Louange with school fees and supplies, health insurance, nutritious meals, and mentorship as she works toward this important exam and beyond."
@@ -87,7 +87,7 @@ export const children: Child[] = [
     name: "Chancerine Izuwayo",
     age: 16,
     dream: "Company manager",
-    image: "/Chanceline.jpg",
+    image: "/Chanceline.png",
     summary: "Chanceline is the youngest of five children and lives with her mother, who works on other people's farms to provide for the family.",
     story: [
       "Chanceline is the youngest of five children and lives with her mother, who works on other people's farms to provide for the family. She's in Primary 5 at GS Cyivugiza and has a gift for art and craft, especially weaving. Chanceline dreams big — she wants to become a company manager when she grows up. Sponsorship provides Chanceline with school fees and supplies, health insurance, nutritious meals, and mentorship to help her build the skills she'll need to lead."
@@ -98,7 +98,7 @@ export const children: Child[] = [
     name: "Radju Foranny Kwizera",
     age: 15,
     dream: "Football/soccer player",
-    image: "/Raju.jpg",
+    image: "/Raju.png",
     summary: "Radju is one of five children. He lost his mother four years ago and now lives with his father and grandmother, who works part-time jobs to keep the family afloat.",
     story: [
       "Radju is one of five children. He lost his mother four years ago and now lives with his father and grandmother, who works part-time jobs to keep the family afloat. He's in Primary 6 at GS Cyivugiza, preparing for his national examination, and his favorite way to unwind is on the football pitch — he dreams of becoming a professional football player. Sponsorship supports Radju with school fees and supplies, health insurance, nutritious meals, and mentorship through this important exam year."
@@ -120,7 +120,7 @@ export const children: Child[] = [
     name: "Beline Niyonkuru",
     age: 18,
     dream: "Bank Manager",
-    image: "/Beline.jpg",
+    image: "/Beline.png",
     summary: "Beline is the youngest of four children and lives with both of her parents, who work part-time jobs to support the family.",
     story: [
       "Beline is the youngest of four children and lives with both of her parents, who work part-time jobs to support the family. She's a Senior 5 student in the Math-Economics-Geography (MEG) combination at Sainte Marie Reine, with her sights set on a career as a bank manager. Outside her studies, Beline loves traditional dance and the culture behind it. Sponsorship gives Beline school fees and supplies, health insurance, nutritious meals, and mentorship as she works toward a future in finance."
@@ -131,7 +131,7 @@ export const children: Child[] = [
     name: "Yvan Rucogoza",
     age: 18,
     dream: "Traditional dancer",
-    image: "/Yvan.jpg",
+    image: "/Yvan.png",
     summary: "Yvan lives with both of his parents in a family of seven children. His father works as a security guard at a bank.",
     story: [
       "Yvan lives with both of his parents in a family of seven children. His father works as a security guard at a bank to provide for everyone. At Auto Ecole Ste Famille VTC, Yvan is training in Level 3 Mechanics, building practical skills for his future career. He's also a gifted traditional dancer and lights up whenever there's a chance to perform. Sponsorship supports Yvan with school fees, school supplies, health insurance, nutritious meals, and mentorship as he completes his technical training."
@@ -143,7 +143,7 @@ export const children: Child[] = [
     name: "Kenny Cezar Uwiragiye",
     age: 13,
     dream: "Judge",
-    image: "/Cesar.jpg",
+    image: "/Cesar.png",
     summary: "Kenny Cezar lives with his mother in a family of seven children.",
     story: [
       "Kenny Cezar lives with his mother in a family of seven children. He's in Primary 6 at GS Cyivugiza, preparing for his national examination, and has set his heart on becoming a judge one day. Traditional dance is his favorite way to spend free time, and he rarely misses a chance to perform. Sponsorship gives Kenny Cezar school fees, school supplies, health insurance, nutritious meals, and mentorship through this critical exam year."
@@ -154,7 +154,7 @@ export const children: Child[] = [
     name: "Assouman Tugerageze",
     age: 15,
     dream: "Football/soccer player",
-    image: "/Assouman.jpg",
+    image: "/Assouman.png",
     summary: "Assouman lives with both of his parents in a family of five children. His mother works as a cook at the Reclaim Hope Rwanda Center.",
     story:
       [
@@ -166,7 +166,7 @@ export const children: Child[] = [
     name: "Chance Umuhire",
     age: 17,
     dream: "Hotel Manager",
-    image: "/Chance.jpg",
+    image: "/Chance.png",
     summary: "Chance is the eldest of three children and lives with her mother, who takes on part-time work to support the family.",
     story: [
       "Chance is the eldest of three children and lives with her mother, who takes on part-time work to support the family. She's a Senior 5 student in the Languages (LFK) combination at GS Shyogwe, with a warm, people-first personality that shows in everything she does — she loves building good relationships with others. Chance dreams of becoming a hotel manager. Sponsorship gives Chance school fees, school supplies, health insurance, nutritious meals, and mentorship as she finishes secondary school."
@@ -177,7 +177,7 @@ export const children: Child[] = [
     name: "Samuel Umurerwa",
     age: 16,
     dream: "Software Developer",
-    image: "/Samuel.jpg",
+    image: "/Samuel.png",
     summary: "Samuel lives with both of his parents, who do part-time work to support the family. He and his two siblings have faced real loss together as a family, but have remained close.",
     story:[
       "Samuel lives with both of his parents, who do part-time work to support the family. He and his two siblings have faced real loss together, but they've remained close. Samuel is in Senior 3 at GS Cyivugiza, preparing for his national examination, with a clear goal in mind — he wants to become a software developer. Sponsorship gives Samuel school fees, school supplies, health insurance, nutritious meals, and mentorship as he works toward that goal."
@@ -189,7 +189,7 @@ export const children: Child[] = [
     name: "Sharapova Umwari",
     age: 10,
     dream: "Pilot",
-    image: "/Sharapova.jpg",
+    image: "/Sharapova.png",
     summary: "Sharapova is the youngest of five children. She lost her mother four years ago and now lives with her father and grandmother, supported by her father's part-time work.",
     story: [
       "Sharapova is the youngest of five children. She lost her mother four years ago and now lives with her father and grandmother, supported by her father's part-time work. She's in Primary 3 at EP Gitega, and dance is where she truly shines — modern dance is her favorite. Sharapova has a big dream: she wants to become a pilot. Sponsorship gives Sharapova school fees, school supplies, health insurance, nutritious meals, and mentorship as she pursues that dream."
@@ -200,7 +200,7 @@ export const children: Child[] = [
     name: "Betty Usanase",
     age: 16,
     dream: "Makeup artist",
-    image: "/Betty.jpg",
+    image: "/Betty.png",
     summary: "Betty is the youngest of four children and lives with both of her parents, who do part-time work to provide for the family.",
     story: [
       "Betty is the youngest of four children and lives with both of her parents, who do part-time work to provide for the family. She's a Senior 4 student in the MS2 combination at Ecole Sainte Bernadette, and her passion lies in beauty — she loves doing makeup for others and dreams of becoming a professional makeup artist. Sponsorship gives Betty school fees, school supplies, health insurance, nutritious meals, and mentorship as she builds toward that career."
@@ -211,7 +211,7 @@ export const children: Child[] = [
     name: "Ornella Usanase",
     age: 9,
     dream: "Soldier",
-    image: "/Ornella.jpg",
+    image: "/Ornella.png",
     summary: "Ornella lives with both of her parents in a family of seven children, supported by her parents' part-time work.",
     story: [
       "Ornella lives with both of her parents in a family of seven children, supported by her parents' part-time work. She's in Primary 4 at GS Cyivugiza, and loves nothing more than playing with her friends after school. Ornella has a bold ambition — she wants to become a soldier when she grows up. Sponsorship gives Ornella school fees, school supplies, health insurance, nutritious meals, and mentorship to support her along the way."
@@ -220,7 +220,7 @@ export const children: Child[] = [
   {
     id: "Kennedy",
     name: "Ganza Kennedy Uwimana",
-    image: "/Kennedy.jpg",
+    image: "/Kennedy.png",
     age: 8,
     dream: "Soldier",
     summary: "Ganza is the eldest of two children and lives with both of his parents. His mother works as a cleaner at the Reclaim Hope Rwanda Center.",
@@ -233,7 +233,7 @@ export const children: Child[] = [
     name: "Innocent Uwimana",
     age: 18,
     dream: "Football/soccer player",
-    image: "/Innocent.jpg",
+    image: "/Innocent.png",
     summary: "Innocent is one of six children. Both of his parents have passed away, and he is now cared for by a guardian.",
     story: [
       "Innocent is one of six children. Both of his parents have passed away, and he is now cared for by a guardian. He is training in Level 3 Mechanics at Auto Ecole Ste Famille VTC, building hands-on skills for his future, and football is where he loves to spend his free time. Sponsorship gives Innocent school fees, school supplies, health insurance, nutritious meals, and mentorship as he completes his training."
@@ -244,7 +244,7 @@ export const children: Child[] = [
     name: "Jean Baptiste Uwituze",
     age: 13,
     dream: "Football/soccer player",
-    image: "/Baptise.jpg",
+    image: "/Baptiste.png",
     summary: "Jean Baptiste lives with both of his parents in a family of three children, supported by his parents' part-time work.",
     story: [
       "Jean Baptiste lives with both of his parents in a family of three children, supported by his parents' part-time work. He's in Senior 1 at GS Cyivugiza, and football is at the center of his world — he dreams of becoming a professional football player. Sponsorship gives Jean Baptiste school fees, school supplies, health insurance, nutritious meals, and mentorship as he begins secondary school."

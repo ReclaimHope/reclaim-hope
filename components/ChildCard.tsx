@@ -29,7 +29,7 @@ export default function ChildCard({
           src={image}
           alt={name}
           fill
-          className="object-cover object-center group-hover:scale-105 transition duration-700"
+          className="object-contain group-hover:scale-105 transition duration-700"
         />
       </div>
 
