@@ -53,7 +53,7 @@ export default function Navbar() {
                             <li key={item.href}>
                                 <Link
                                     href={item.href}
-                                    className={`transition ${active ? "text-yellow-600 font-semibold" : "hover:text-yellow-500"}`}
+                                    className={`transition ${active ? "text-[#f9d20a] font-semibold" : "hover:text-[#f9d20a]"}`}
                                     aria-current={active ? "page" : undefined}
                                 >
                                     {item.label}
@@ -66,7 +66,7 @@ export default function Navbar() {
                     <li>
                         <Link
                             href="/donate"
-                            className="bg-yellow-600 text-white px-8 py-4 rounded hover:bg-yellow-500 transition"
+                            className="bg-[#f9d20a] text-white px-8 py-4 rounded hover:bg-yellow-500 transition"
                         >
                             Donate
                         </Link>
@@ -75,7 +75,7 @@ export default function Navbar() {
                 <button className="md:hidden text-black"
                     onClick={() => setOpen(!open)}
                 >
-                    ☰
+                    {open ? "✕" : "☰"}
                 </button>
             </nav>
 
@@ -100,7 +100,7 @@ export default function Navbar() {
                             <li key={item.href}>
                                 <Link
                                     href={item.href}
-                                    className={`block transition ${active ? "text-yellow-600 font-semibold" : "hover:text-yellow-500"}`}
+                                    className={`block transition ${active ? "text-[#f9d20a] font-semibold" : "hover:text-yellow-500"}`}
                                     aria-current={active ? "page" : undefined}
                                 >
                                     {item.label}
@@ -109,7 +109,7 @@ export default function Navbar() {
                         );
                     })}
                     <li>
-                        <Link href="/donate" className="bg-yellow-600 text-white px-5 py-2 rounded inline-block">
+                        <Link href="/donate" className="bg-[#f9d20a] text-white px-5 py-2 rounded inline-block">
                             Donate
                         </Link>
                     </li>

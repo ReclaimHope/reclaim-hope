@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-export default function HelpSection() {
+export default function TempComponent() {
 
     const involvementOptions = [
         {

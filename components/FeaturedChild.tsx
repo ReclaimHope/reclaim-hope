@@ -28,7 +28,7 @@ export default function FeaturedChild({ child }: FeaturedChildProps) {
               src={child.image}
               alt={child.name}
               fill
-              className="object-cover"
+              className="object-contain"
             />
           </div>
           <div>
@@ -54,7 +54,7 @@ export default function FeaturedChild({ child }: FeaturedChildProps) {
               </p>
             ))}
 
-            <button className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-full font-semibold transition">
+            <button className="bg-[#f9d20a] hover:bg-[#d6b308] cursor-pointer text-white px-8 py-4 rounded-full font-semibold transition">
               Sponsor {child.name}
             </button>
           </div>

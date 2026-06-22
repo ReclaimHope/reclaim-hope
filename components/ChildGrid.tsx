@@ -109,7 +109,7 @@ export const children: Child[] = [
     name: "Raoul Mugisha",
     age: 18,
     dream: "Electrical engineer",
-    image: "/Raoul.jpg",
+    image: "/Raoul.png",
     summary: "Raoul is one of seven children and lives with both of his parents, with his father taking on part-time work to support the family.",
     story: [
       "Raoul is one of seven children and lives with both of his parents, with his father taking on part-time work to support the family. He's in Level 3, studying Electrical Technology at GS Akumunigo TSS, and is determined to become an electrical engineer. Music runs through him too — he loves playing the drums in his free time. Sponsorship helps Raoul with school fees and supplies, health insurance, nutritious meals, and mentorship as he trains for his future career."
@@ -244,7 +244,7 @@ export const children: Child[] = [
     name: "Jean Baptiste Uwituze",
     age: 13,
     dream: "Football/soccer player",
-    image: "/Baptiste.png",
+    image: "/Baptise.png",
     summary: "Jean Baptiste lives with both of his parents in a family of three children, supported by his parents' part-time work.",
     story: [
       "Jean Baptiste lives with both of his parents in a family of three children, supported by his parents' part-time work. He's in Senior 1 at GS Cyivugiza, and football is at the center of his world — he dreams of becoming a professional football player. Sponsorship gives Jean Baptiste school fees, school supplies, health insurance, nutritious meals, and mentorship as he begins secondary school."
@@ -255,7 +255,7 @@ export const children: Child[] = [
     name: "Fabienne Munezero",
     age: 8,
     dream: "Teacher",
-    image: "/Munezero.jpg",
+    image: "/Munezero.png",
     summary: "Fabienne is the youngest of five children and lives with both of her parents. Her mother works as a cook at the Reclaim Hope Rwanda Center.",
     story: [
       "Fabienne is the youngest of five children and lives with both of her parents. Her mother works as a cook at the Reclaim Hope Rwanda Center. A Primary 4 student at EP Ntwali, Fabienne lights up whenever modern dance music comes on — it's her favorite way to express herself. She dreams of becoming a teacher when she grows up. Sponsorship provides Fabienne with school fees and supplies, health insurance, nutritious meals, and mentorship to support her education."
