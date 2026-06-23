@@ -90,7 +90,7 @@ export default function DonateTestimonials() {
               </blockquote>
 
               <div className="mt-6 flex items-center">
-                <div className="flex text-yellow-400">
+                <div className="flex text-[#f9d20a]">
                   {'★'.repeat(5)}
                 </div>
                 <span className="ml-2 text-gray-600 text-sm">
@@ -118,7 +118,7 @@ export default function DonateTestimonials() {
             </p>
             <a
               href="#donation-form"
-              className="bg-yellow-600 hover:bg-yellow-700 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 hover:scale-105 shadow-lg inline-block"
+              className="bg-[#f9d20a] hover:bg-[#e6b800] text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 hover:scale-105 shadow-lg inline-block"
             >
               Start Your Story Today
             </a>

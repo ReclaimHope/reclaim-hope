@@ -32,13 +32,13 @@ export default function FeaturedChild({ child }: FeaturedChildProps) {
             />
           </div>
           <div>
-            <p className="text-orange-500 uppercase tracking-[0.3em] font-semibold mb-4">
+            <p className="text-[#f9d20a] uppercase tracking-[0.3em] font-semibold mb-4">
               Child Profile
             </p>
             <h1 className="text-5xl font-bold text-gray-900 mb-4">
               {child.name}, {child.age}
             </h1>
-            <p className="text-2xl text-orange-500 font-semibold mb-6">
+            <p className="text-2xl text-[#f9d20a] font-semibold mb-6">
               Dreams of Becoming a {child.dream}
             </p>
             <p className="text-lg text-gray-600 leading-relaxed mb-8">

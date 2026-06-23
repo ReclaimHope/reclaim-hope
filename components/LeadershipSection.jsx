@@ -11,9 +11,10 @@ export default function LeadershipSection() {
     const leaders = [
         {
             id: 1,
-            name: "Philip Murari",
-            role: "Executive Director",
+            name: "Phillip Mulari",
+            role: "Founder",
             image: "/Professional phil.png",
+            email: "phillip.mulari@reclaimhoperw.org",
             bio: "Passionate about empowering underserved children through education and community development initiatives.",
         },
 
@@ -23,6 +24,7 @@ export default function LeadershipSection() {
             role: "Executive Director",
             image: "/Professional Cecile.jpeg",
             bio: "Focused on mentorship programs, youth empowerment, and creating sustainable community impact.",
+            email: "cecile.uwumukiza@reclaimhoperw.org"
         },
 
         {
@@ -31,6 +33,7 @@ export default function LeadershipSection() {
             role: "Office Manager",
             image: "/Professional Benefils.jpeg",
             bio: "Dedicated to strengthening community partnerships and expanding support initiatives across Rwanda.",
+            email: "benefils@reclaimhoperw.org"
         },
     ];
 
@@ -92,7 +95,7 @@ export default function LeadershipSection() {
                             {/* SOCIALS */}
 
                             <div className="flex rounded-full text-white gap-2 justify-center bg-yellow-500 py-2 cursor-pointer">
-                                <Mail className="w-5 h-5 " /> cecile@reclaimhope.rw
+                                <Mail className="w-5 h-5 " /> {leader.email}
                             </div>
 
                         </div>

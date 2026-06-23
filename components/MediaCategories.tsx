@@ -30,10 +30,10 @@ export default function MediaCategories({
               key={item}
               type="button"
               onClick={() => onCategoryChange(item)}
-              className={`px-6 py-3 rounded-full border transition text-white ${
+              className={`px-6 py-3 rounded-full border transition ${
                 isActive
-                  ? "border-yellow-500 bg-yellow-500 "
-                  : "border-gray-300 text-gray-700 hover:bg-yellow-500"
+                  ? "border-[#f9d20a] bg-[#f9d20a] text-white hover:bg-[#d6b308] "
+                  : "border-gray-300 text-[#f9d20a] hover:bg-[#f9d20a]"
               }`}
             >
               <span className="text-white">{item}</span>

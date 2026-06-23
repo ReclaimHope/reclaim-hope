@@ -7,7 +7,7 @@ export default function MediaFeaturedStory() {
 
           <div className="relative min-h-[450px]">
             <img
-              src="/aline.png"
+              src="/logo-transparent.png"
               alt="Featured Story"
               className="w-full h-full object-cover"
             />

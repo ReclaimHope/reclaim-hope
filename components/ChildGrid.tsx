@@ -277,7 +277,7 @@ export default function ChildGrid({
     <section id="" className="w-full bg-[#f9fafb] py-24 px-6 md:px-16">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-20">
-          <p className="text-yellow-500 uppercase tracking-[0.3em] font-semibold mb-4">
+          <p className="text-[#f9d20a] uppercase tracking-[0.3em] font-semibold mb-4">
             Meet the Children
           </p>
         </div>

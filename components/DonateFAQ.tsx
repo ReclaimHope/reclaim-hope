@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import StillHaveQuestion from './stillHaveQuestion';
 
 export default function DonateFAQ() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
@@ -12,10 +13,6 @@ export default function DonateFAQ() {
   }, []);
 
   const faqs = [
-    {
-      question: "Are donations secure?",
-      answer: "Yes, absolutely. We use industry-standard SSL encryption and work with trusted payment processors like Stripe and Flutterwave. Your payment information is never stored on our servers and all transactions are PCI compliant."
-    },
     {
       question: "Can I donate internationally?",
       answer: "Yes! We accept donations from anywhere in the world. International donors can use credit/debit cards, PayPal, or local payment methods through our partners. All international donations are tax-deductible where applicable."
@@ -113,33 +110,7 @@ export default function DonateFAQ() {
         </div>
 
         {/* Still have questions */}
-        <div
-          className="text-center mt-12 bg-yellow-50 border border-yellow-200 rounded-xl p-8"
-          data-aos="fade-up"
-          data-aos-delay="600"
-        >
-          <h3 className="text-2xl font-bold text-gray-900 mb-4">
-            Still Have Questions?
-          </h3>
-          <p className="text-gray-600 mb-6">
-            We're here to help! Contact our team and we'll answer any questions
-            you have about donating or supporting our mission.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="/contact"
-              className="bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:scale-105"
-            >
-              Contact Us
-            </a>
-            <a
-              href="tel:+1234567890"
-              className="bg-white border border-yellow-600 text-yellow-600 hover:bg-yellow-50 px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:scale-105"
-            >
-              Call Now
-            </a>
-          </div>
-        </div>
+       <StillHaveQuestion/>
       </div>
     </section>
   );

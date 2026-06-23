@@ -31,7 +31,7 @@ export default function ProductCard({ product, onBuy }: { product: Product; onBu
           <div className="font-bold text-lg text-2xl text-gray-800">${product.price.toFixed(2)}</div>
           <button
             onClick={() => onBuy(product)}
-            className="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg font-semibold"
+            className="bg-[#001f3f] hover:bg-[#003366] cursor-pointer text-white px-4 py-2 rounded-lg font-semibold"
           >
             Buy
           </button>

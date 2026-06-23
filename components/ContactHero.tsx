@@ -2,13 +2,13 @@ import Image from "next/image";
 
 export default function ContactHero() {
   return (
-    <section className="relative h-screen w-full overflow-hidden">
+    <section className="relative h-[160vh] w-full overflow-hidden">
       {/* Optimized Hero Image */}
       <Image
-        src="/hero-img.jpg" // Or a specific contact hero image
+        src="/Contact Us 1.jpg" // Or a specific contact hero image
         alt="Get in touch with Reclaim Hope Rwanda"
         fill
-        className="object-cover animate-hero-zoom"
+        className="object-cover object-center  animate-hero-zoom"
         priority
         quality={85}
         sizes="100vw"

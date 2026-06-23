@@ -234,7 +234,7 @@ export default function DonationForm() {
                 className={`px-12 py-4 rounded-lg font-semibold text-lg transition-all duration-300 ${
                   isSubmitting
                     ? 'bg-gray-400 cursor-not-allowed'
-                    : 'bg-yellow-600 hover:bg-yellow-700 hover:scale-105 shadow-lg'
+                    : 'bg-[#f9d20a] hover:bg-[#e6b800] hover:scale-105 shadow-lg'
                 } text-white`}
               >
                 {isSubmitting ? 'Processing...' : `Donate $${formData.amount || '0'}`}

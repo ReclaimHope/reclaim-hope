@@ -13,13 +13,13 @@ export default function DonatePage() {
     <div className="min-h-screen">
       <DonateHero />
       <WhyDonationsMatter />
-      <DonationOptions />
+      {/* <DonationOptions /> */}
       <SuggestedAmounts />
       <DonationForm />
       <ImpactTransparency />
       <DonateTestimonials />
       <DonateFAQ />
-      <DonateFinalCTA />
+      {/* <DonateFinalCTA /> */}
     </div>
   );
 }

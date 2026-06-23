@@ -9,7 +9,7 @@ export default function IntroductionSection() {
                 <div className="flex justify-center animate-slide-in-left">
                     <div className="animate-float">
                         <Image
-                            src="/intro.png"
+                            src="/About Us 1.jpg"
                             alt="Children learning and receiving educational support from Reclaim Hope Rwanda"
                             width={500}
                             height={500}
@@ -40,7 +40,7 @@ export default function IntroductionSection() {
                     </p>
 
                     <button className="mt-8">
-                        <a href="/about" className=" bg-green-600 hover:bg-green-700 transition-all duration-300 text-white px-10 py-4 rounded-full font-medium cursor-pointer hover:scale-105">
+                        <a href="/about" className=" bg-[#001f3f] hover:bg-[#002b5b] transition-all duration-300 text-white px-10 py-4 rounded-full font-medium cursor-pointer hover:scale-105">
                             Learn More
                         </a>
                     </button>

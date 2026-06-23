@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function ReportsArchive() {
   return (
-    <section className="py-24 px-6 md:px-16 bg-gradient-to-b from-yellow-50 to-white">
+    <section id="reports-archive" className="py-24 px-6 md:px-16 bg-gradient-to-b from-yellow-50 to-white">
 
       <div className="max-w-7xl mx-auto">
 
@@ -27,7 +27,7 @@ export default function ReportsArchive() {
                 Highlights from our education and nutrition programs.
               </p>
 
-              <button className="bg-yellow-500 text-white px-6 py-3 rounded-full">
+              <button className="bg-[#001f3f] text-white px-6 py-3 rounded-full">
                 Download PDF
               </button>
 
@@ -38,7 +38,7 @@ export default function ReportsArchive() {
         </div>
 
       </div>
-      <p className="block text-center text-gray-600 w-full mt-16 px-6 py-3">Explore our photo gallery and see the impact of our work in action <Link href="/gallery"  className="text-[#11a0db]">View Gallery</Link></p>
+      {/* <p className="block text-center text-gray-600 w-full mt-16 px-6 py-3">Explore our photo gallery and see the impact of our work in action <Link href="#"  className="text-[#11a0db]">View Gallery</Link></p> */}
 
     </section>
   );

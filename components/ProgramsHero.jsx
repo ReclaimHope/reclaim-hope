@@ -3,17 +3,14 @@ export default function ProgramsHero() {
         <section
             className="relative w-full h-[75vh] bg-cover bg-center flex items-center justify-center px-6 md:px-16 overflow-hidden"
             style={{
-                backgroundImage: "url('/programs-hero.png')",
+                backgroundImage: "url('/Programs 6.jpg')",
             }}
         >
 
-            {/* DARK OVERLAY */}
-            <div className="absolute inset-0 bg-black/65"></div>
-
-            {/* DECORATIVE GLOW */}
+            {/* DECORATIVE GLOW
             <div className="absolute top-20 left-10 w-72 h-72 bg-yellow-500/20 blur-3xl rounded-full"></div>
 
-            <div className="absolute bottom-10 right-10 w-72 h-72 bg-green-500/20 blur-3xl rounded-full"></div>
+            <div className="absolute bottom-10 right-10 w-72 h-72 bg-green-500/20 blur-3xl rounded-full"></div> */}
 
             {/* CONTENT */}
             <div className="relative z-10 max-w-4xl text-center text-white">

@@ -25,7 +25,7 @@ export default function NewsletterArchive() {
                 Highlights from our education and nutrition programs.
               </p>
 
-              <button className="bg-yellow-500 text-white px-6 py-3 rounded-full">
+              <button className="bg-[#001f3f] text-white px-6 py-3 rounded-full">
                 Download PDF
               </button>
 

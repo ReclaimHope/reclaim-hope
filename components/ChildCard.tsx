@@ -21,7 +21,7 @@ export default function ChildCard({
   return (
     <div
       className={`group bg-white rounded-[32px] overflow-hidden shadow-md border ${
-        active ? "border-yellow-500 ring-2 ring-yellow-100" : "border-gray-100"
+        active ? "border-[#f9d20a] ring-2 ring-[#f9d20a]" : "border-gray-100"
       } hover:shadow-2xl hover:-translate-y-3 transition duration-500`}
     >
       <div className="relative h-[280px] sm:h-[320px] overflow-hidden">
@@ -42,14 +42,14 @@ export default function ChildCard({
           <button
             type="button"
             onClick={() => onSelect(id)}
-            className="inline-flex items-center justify-center w-full bg-yellow-500 hover:bg-yellow-600 transition duration-300 text-white py-2 rounded-full font-semibold"
+            className="inline-flex items-center justify-center w-full bg-[#f9d20a] hover:bg-[#d6b308] transition duration-300 text-white py-2 rounded-full font-semibold"
           >
             Meet {name}
           </button>
         ) : (
           <Link
             href={`/sponsor/${id}`}
-            className="inline-flex items-center justify-center w-full bg-yellow-500 hover:bg-yellow-600 transition duration-300 text-white py-2 rounded-full font-semibold"
+            className="inline-flex items-center justify-center w-full bg-[#f9d20a] hover:bg-[#d6b308] transition duration-300 text-white py-2 rounded-full font-semibold"
           >
             Meet {name}
           </Link>

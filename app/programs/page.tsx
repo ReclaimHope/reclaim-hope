@@ -12,7 +12,6 @@ export default function Page() {
             <ProgramsHero />
             <ProgramsIntroduction />
             <ProgramsGrid/>
-            <ImpactSection/>
             <HelpSection/>
         </div>
     )

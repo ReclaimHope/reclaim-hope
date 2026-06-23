@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 const slides = [
   "/Home 1.JPG",
-  "/Home 2.jpg",
+  // "/Impact .jpg",
   "/Home 3.jpg",
   "/Home 4.jpg",
 ];
@@ -46,7 +46,7 @@ export default function HeroSection() {
       </div>
 
       {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-black/60 z-[1]" />
+      {/* <div className="absolute inset-0 bg-black/60 z-[1]" /> */}
 
       {/* Content */}
       <div className="relative z-10 flex h-full items-center justify-center px-6">
@@ -66,14 +66,14 @@ export default function HeroSection() {
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center animate-fade-up-delay-3">
             <a
               href="/donate"
-              className="px-6 py-3 bg-green-600 hover:bg-green-500 transition rounded-lg font-semibold"
+              className="px-6 py-3 bg-[#f9d20a] hover:bg-yellow-500 transition rounded-lg font-semibold"
             >
               Donate Now
             </a>
 
             <a
               href="/sponsor"
-              className="px-6 py-3 bg-yellow-600 hover:bg-yellow-500 transition rounded-lg font-semibold"
+              className="px-6 py-3 bg-green-600 hover:bg-green-500 transition rounded-lg font-semibold"
             >
               Sponsor a Child
             </a>

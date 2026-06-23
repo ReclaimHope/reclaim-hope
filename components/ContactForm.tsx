@@ -152,7 +152,7 @@ export default function ContactForm() {
             <div className="text-center">
               <button
                 type="submit"
-                className="inline-flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 transition px-8 py-4 rounded-full text-white font-semibold text-lg"
+                className="inline-flex items-center gap-2 bg-[#f9d20a] hover:bg-[#e6b800] transition px-8 py-4 rounded-full text-white font-semibold text-lg"
               >
                 Send Message
                 <Send className="w-5 h-5" />

@@ -11,6 +11,7 @@ type TransparencyItem = {
     title: string;
     description: string;
 };
+import Link from "next/link";
 
 export default function TransparencySection() {
 
@@ -59,7 +60,7 @@ export default function TransparencySection() {
                     <div>
 
                         {/* LABEL */}
-                        <p className="text-green-600 uppercase tracking-[0.3em] font-semibold mb-6">
+                        <p className="text-[#001f3f] uppercase tracking-[0.3em] font-semibold mb-6">
                             Transparency & Accountability
                         </p>
 
@@ -97,11 +98,11 @@ export default function TransparencySection() {
                         </div>
 
                         {/* BUTTON */}
-                        <button className="bg-green-600 hover:bg-green-700 transition duration-300 text-white px-10 py-4 rounded-full text-lg font-semibold shadow-xl hover:scale-105">
+                        <Link href="/media-center" className="bg-[#001f3f] hover:bg-[#003366] transition duration-300 text-white px-10 py-4 rounded-full text-lg font-semibold shadow-xl hover:scale-105">
 
                             View Impact Reports
 
-                        </button>
+                        </Link>
 
                     </div>
 
@@ -121,7 +122,7 @@ export default function TransparencySection() {
                                     {/* ICON */}
                                     <div className="w-18 h-18 bg-green-100 rounded-3xl flex items-center justify-center mb-6">
 
-                                        <Icon className="w-9 h-9 text-green-600" />
+                                        <Icon className="w-9 h-9 text-[#001f3f]" />
 
                                     </div>
 

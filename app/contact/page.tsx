@@ -5,6 +5,7 @@ import ContactForm from "@/components/ContactForm";
 import MapLocation from "@/components/MapLocation";
 import FAQSupport from "@/components/FAQSupport";
 import FinalCTASection from "@/components/cta";
+import HelpSection from "@/components/help";
 
 export default function ContactPage() {
   return (
@@ -15,7 +16,7 @@ export default function ContactPage() {
       <ContactForm />
       <MapLocation />
       <FAQSupport />
-      <FinalCTASection />
+      <HelpSection/>
     </div>
   );
 }

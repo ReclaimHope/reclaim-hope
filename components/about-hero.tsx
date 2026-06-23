@@ -1,6 +1,6 @@
 export default function AboutHero() {
     return (
-        <section className="relative h-[60vh] flex items-center justify-center">
+        <section className="relative h-[110vh] flex items-center justify-center">
 
             {/* Background Image */}
             <div
@@ -9,9 +9,6 @@ export default function AboutHero() {
                     backgroundImage: "url('/Home 3.jpg')",
                 }}
             />
-
-            {/* Overlay */}
-            <div className="absolute inset-0 bg-black/50" />
 
             {/* Content */}
             <div className="relative z-10 text-center text-white px-6">

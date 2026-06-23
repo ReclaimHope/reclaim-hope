@@ -11,8 +11,8 @@ export default function ShopHero() {
 
   return (
     <section
-      className="relative min-h-[50vh] flex items-center justify-center overflow-hidden bg-cover bg-center text-white py-20"
-      style={{ backgroundImage: "url('/community.jpg')" }}
+      className="relative min-h-[110vh] flex items-center justify-center overflow-hidden bg-fill bg-center text-white py-20"
+      style={{ backgroundImage: "url('/Shop hero.JPG')" }}
     >
       <div className="absolute inset-0 bg-black/60" />
       <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">

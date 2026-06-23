@@ -29,7 +29,7 @@ export default function ImpactMetrics() {
         {
             id: 1,
             icon: Utensils,
-            number: 65000,
+            number: 90000,
             suffix: "+",
             title: "Meals Served",
             description:

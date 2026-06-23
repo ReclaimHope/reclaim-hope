@@ -14,7 +14,7 @@ import {
 
 export default function Footer() {
     return (
-        <footer className="w-full bg-[#11a0db] text-white px-6 md:px-16 pt-24 pb-10">
+        <footer className="w-full bg-[#001f3f] text-white px-6 md:px-16 pt-24 pb-10">
 
             <div className="max-w-7xl mx-auto">
 
@@ -27,11 +27,13 @@ export default function Footer() {
                         {/* LOGO */}
                         <div className="flex items-center gap-3 mb-6">
 
-                            <img
-                                src="/logo-transparent.png"
-                                alt="Logo"
-                                className="w-14 h-14 object-contain"
-                            />
+                            <div className="w-35 h-23 rounded-[50%] bg-white flex items-center justify-center p-2">
+                                <img
+                                    src="/logo-transparent.png"
+                                    alt="Logo"
+                                    className="object-contain rounded-md"
+                                />
+                            </div>
 
                             <h2 className="text-2xl font-bold">
                                 Reclaim Hope Rwanda
@@ -49,38 +51,40 @@ export default function Footer() {
                         {/* SOCIALS */}
                         <div className="flex items-center gap-4">
                             <a
-                                href="#"
+                                href="Facebook: https://www.facebook.com/profile.php?id=61589336073208"
                                 className="w-10 h-10 rounded-full bg-white/10 hover:text-[#11a0db] hover:bg-white transition flex items-center justify-center"
                             >
                                 <FaFacebook className="w-5 h-5" />
                             </a>
 
                             <a
-                                href="#"
+                                href="Instagram:https://www.instagram.com/reclaimhoperwanda/"
                                 className="w-10 h-10 rounded-full bg-white/10 hover:text-[#11a0db] hover:bg-white transition flex items-center justify-center"
                             >
                                 <FaInstagram className="w-5 h-5" />
                             </a>
 
-                            <a
+                            {/* <a
                                 href="#"
                                 className="w-10 h-10 rounded-full bg-white/10 hover:text-[#11a0db] hover:bg-white transition flex items-center justify-center"
                             >
                                 <FaLinkedin className="w-5 h-5" />
-                            </a>
+                            </a> */}
 
-                            <a
+                            {/* <a
                                 href="#"
                                 className="w-10 h-10 rounded-full bg-white/10 hover:text-[#11a0db] hover:bg-white transition flex items-center justify-center"
                             >
                                 <FaYoutube className="w-5 h-5" />
-                            </a>
+                            </a> */}
 
                             <a
-                                href="#"
+                                href="https://substack.com/@reclaimhope?utm_source=global-search"
                                 className="w-10 h-10 rounded-full bg-white/10 hover:text-[#11a0db] hover:bg-white transition flex items-center justify-center"
                             >
-                                <FaXTwitter className="w-5 h-5" />
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-substack" viewBox="0 0 16 16">
+                                    <path d="M15 3.604H1v1.891h14v-1.89ZM1 7.208V16l7-3.926L15 16V7.208zM15 0H1v1.89h14z" />
+                                </svg>
                             </a>
                         </div>
 
@@ -114,7 +118,7 @@ export default function Footer() {
 
                             <li>
                                 <a href="/sponsor" className="hover:text-yellow-400 transition">
-                                    SPonsor a Child
+                                    Sponsor a Child
                                 </a>
                             </li>
 
@@ -188,30 +192,6 @@ export default function Footer() {
 
                         </div>
 
-                        {/* MINI NEWSLETTER */}
-                        <div className="mt-8">
-
-                            <p className="text-sm text-white/60 mb-4">
-                                Stay connected with our latest updates.
-                            </p>
-
-                            <div className="flex items-center bg-white/10 rounded-full overflow-hidden">
-
-                                <input
-                                    type="email"
-                                    placeholder="Your email"
-                                    className="bg-transparent px-5 py-3 flex-1 outline-none text-sm"
-                                />
-
-                                <button className="bg-yellow-500 hover:bg-yellow-600 transition p-3">
-
-                                    <ArrowRight className="w-5 h-5" />
-
-                                </button>
-
-                            </div>
-
-                        </div>
 
                     </div>
 

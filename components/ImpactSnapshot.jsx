@@ -10,14 +10,14 @@ export default function ImpactSnapshot() {
     const stats = [
         {
             id: 1,
-            number: "1200+",
+            number: "500+",
             label: "Children Supported",
             icon: Users,
         },
 
         {
             id: 2,
-            number: "5000+",
+            number: "90,000+",
             label: "Meals Provided",
             icon: Utensils,
         },

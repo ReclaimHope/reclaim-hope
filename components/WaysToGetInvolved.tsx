@@ -17,7 +17,7 @@ export default function WaysToGetInvolved() {
                 "Help provide education, nutrition, and emotional support for underserved children.",
             button: "Become a Sponsor",
             icon: HeartHandshake,
-            color: "yellow",
+            color: "green",
         },
 
         {
@@ -27,7 +27,7 @@ export default function WaysToGetInvolved() {
                 "Support our programs through one-time or monthly contributions that transform lives.",
             button: "Donate Now",
             icon: HandCoins,
-            color: "green",
+            color: "yellow",
         },
 
         {
@@ -47,27 +47,27 @@ export default function WaysToGetInvolved() {
                 "Collaborate with us to create sustainable impact for children and families.",
             button: "Become a Partner",
             icon: Building2,
-            color: "purple",
+            color: "blue",
         },
     ];
 
     const colorClasses = {
         yellow: {
-            bg: "bg-yellow-100",
-            text: "text-yellow-500",
-            button: "bg-yellow-500 hover:bg-yellow-600",
+            bg: "bg-[#f9d20a]",
+            text: "text-[#f9d20a]",
+            button: "bg-[#f9d20a] hover:bg-[#e6c000]",
         },
 
         green: {
-            bg: "bg-green-100",
-            text: "text-green-600",
-            button: "bg-green-500 hover:bg-green-600",
+            bg: "bg-[#20603e]",
+            text: "text-[#20603e]",
+            button: "bg-[#20603e] hover:bg-[#1a4d2f]",
         },
 
         blue: {
-            bg: "bg-blue-100",
-            text: "text-blue-600",
-            button: "bg-blue-500 hover:bg-blue-600",
+            bg: "bg-[#001f3f]",
+            text: "text-[#001f3f]",
+            button: "bg-[#001f3f] hover:bg-[#002b5b]",
         },
 
         purple: {

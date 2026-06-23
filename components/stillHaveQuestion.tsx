@@ -2,7 +2,7 @@ export default function StillHaveQuestion() {
     return (
         <>
             <div
-                className="text-center mt-12 bg-yellow-50 border border-yellow-200 rounded-xl p-8"
+                className="text-center mt-12 bg-blue-50 border border-blue-200 rounded-xl p-8"
                 data-aos="fade-up"
                 data-aos-delay="600"
             >
@@ -16,13 +16,13 @@ export default function StillHaveQuestion() {
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <a
                         href="/contact"
-                        className="bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:scale-105"
+                        className="bg-[#001f3f] hover:bg-[#002b5b] text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:scale-105"
                     >
                         Contact Us
                     </a>
                     <a
-                        href="tel:+1234567890"
-                        className="bg-white border border-yellow-600 text-yellow-600 hover:bg-yellow-50 px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:scale-105"
+                        href="tel:+250727589358"
+                        className="bg-white border border-[#001f3f] text-[#001f3f] hover:bg-[#001f3f] hover:text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:scale-105"
                     >
                         Call Now
                     </a>

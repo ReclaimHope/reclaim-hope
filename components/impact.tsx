@@ -19,13 +19,13 @@ export default function ImpactSection() {
         {
             id: 2,
             icon: BookOpen,
-            number: 120,
+            number: 6,
             label: "Programs",
         },
         {
             id: 3,
             icon: HeartHandshake,
-            number: 300,
+            number: 100,
             label: "Families Empowered",
         },
     ];

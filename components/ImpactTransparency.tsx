@@ -51,20 +51,17 @@ export default function ImpactTransparency() {
                       <span className="font-semibold text-gray-900">
                         {item.category}
                       </span>
-                      <span className="text-yellow-600 font-bold">
+                      <span className="text-[#f9d20a] font-bold">
                         {item.percentage}%
                       </span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-3">
                       <div
-                        className="bg-yellow-600 h-3 rounded-full transition-all duration-1000"
+                        className="bg-[#f9d20a] h-3 rounded-full transition-all duration-1000"
                         style={{ width: `${item.percentage}%` }}
                       ></div>
                     </div>
                   </div>
-                  <span className="ml-4 text-gray-600 font-semibold">
-                    {item.amount}
-                  </span>
                 </div>
               ))}
             </div>

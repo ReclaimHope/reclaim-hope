@@ -85,7 +85,7 @@ export default function MediaArticles() {
           {articles.map((article) => (
             <ArticleCard
               key={article.id}
-              image={article.image}
+              image="/logo-transparent.png"
               category={article.category}
               title={article.title}
               summary={article.summary}
