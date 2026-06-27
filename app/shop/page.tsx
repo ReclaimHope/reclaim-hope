@@ -50,11 +50,19 @@ const SAMPLE_PRODUCTS: Product[] = [
   },
   {
     id: 'p5',
-    title: 'Embroidered Scarf',
-    category: 'Fashion & Accessories',
+    title: 'Made in Rwanda white dress',
+    category: 'Apparel & Clothing',
     price: 22.0,
-    image: '/scarf.jpg',
-    description: 'Soft scarf embroidered by local artisans with vibrant patterns.'
+    image: '/white-dress.JPG',
+    description: 'Elegant white dress made in Rwanda with traditional craftsmanship.'
+  },
+  {
+    id: 'p6',
+    title: 'Umugongo patterns dress',
+    category: 'Apparel & Clothing',
+    price: 22.0,
+    image: '/umugongo.JPG',
+    description: 'Colorful dress featuring traditional Umugongo patterns made in Rwanda.'
   },
 ];
 

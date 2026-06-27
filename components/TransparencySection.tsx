@@ -98,7 +98,7 @@ export default function TransparencySection() {
                         </div>
 
                         {/* BUTTON */}
-                        <Link href="/media-center" className="bg-[#001f3f] hover:bg-[#003366] transition duration-300 text-white px-10 py-4 rounded-full text-lg font-semibold shadow-xl hover:scale-105">
+                        <Link href="/MediaCenter#reports-archive" className="bg-[#001f3f] hover:bg-[#003366] transition duration-300 text-white px-10 py-4 rounded-full text-lg font-semibold shadow-xl hover:scale-105">
 
                             View Impact Reports
 

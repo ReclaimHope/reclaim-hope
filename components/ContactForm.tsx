@@ -62,7 +62,7 @@ export default function ContactForm() {
   };
 
   return (
-    <section className="mx-auto max-w-5xl px-6 py-16">
+    <section id="contact-form" className="mx-auto max-w-5xl px-6 py-16">
       <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
         <h2 className="mb-2 text-3xl font-semibold text-slate-900">Send us a message</h2>
         <p className="mb-8 text-slate-600">

@@ -133,7 +133,7 @@ export default function VolunteerSection() {
                         </div>
 
                         {/* CTA BUTTON */}
-                        <Link href="/contact" className="bg-green-500 hover:bg-green-600 transition duration-300 text-white px-10 py-4 rounded-full text-lg font-semibold shadow-xl hover:scale-105 inline-flex items-center justify-center text-center">
+                        <Link href="/contact#contact-form" className="bg-green-500 hover:bg-green-600 transition duration-300 text-white px-10 py-4 rounded-full text-lg font-semibold shadow-xl hover:scale-105 inline-flex items-center justify-center text-center">
 
                             Join as Volunteer
 

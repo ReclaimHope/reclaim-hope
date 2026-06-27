@@ -53,19 +53,19 @@ export default function WaysToGetInvolved() {
 
     const colorClasses = {
         yellow: {
-            bg: "bg-[#f9d20a]",
+            bg: "bg-yellow-100",
             text: "text-[#f9d20a]",
             button: "bg-[#f9d20a] hover:bg-[#e6c000]",
         },
 
         green: {
-            bg: "bg-[#20603e]",
+            bg: "bg-green-100",
             text: "text-[#20603e]",
             button: "bg-[#20603e] hover:bg-[#1a4d2f]",
         },
 
         blue: {
-            bg: "bg-[#001f3f]",
+            bg: "bg-blue-100",
             text: "text-[#001f3f]",
             button: "bg-[#001f3f] hover:bg-[#002b5b]",
         },
