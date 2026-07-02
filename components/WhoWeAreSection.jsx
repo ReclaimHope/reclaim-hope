@@ -17,7 +17,7 @@ export default function WhoWeAreSection() {
                     <div className="relative overflow-hidden rounded-[40px] shadow-xl">
 
                         <Image
-                            src="/About Us 1.jpg"
+                            src="/About Us Page.jpg"
                             alt="Children learning together"
                             width={700}
                             height={700}

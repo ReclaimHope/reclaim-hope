@@ -28,9 +28,8 @@ export default function HeroSection() {
         {slides.map((slide, index) => (
           <div
             key={slide}
-            className={`absolute inset-0 transition-opacity duration-1000 ${
-              index === currentSlide ? "opacity-100" : "opacity-0"
-            }`}
+            className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? "opacity-100" : "opacity-0"
+              }`}
           >
             <Image
               src={slide}
@@ -44,10 +43,6 @@ export default function HeroSection() {
           </div>
         ))}
       </div>
-
-      {/* Dark Overlay */}
-      {/* <div className="absolute inset-0 bg-black/60 z-[1]" /> */}
-
       {/* Content */}
       <div className="relative z-10 flex h-full items-center justify-center px-6">
         <div className="max-w-2xl text-center text-white">
@@ -73,7 +68,7 @@ export default function HeroSection() {
 
             <a
               href="/sponsor"
-              className="px-6 py-3 bg-green-600 hover:bg-green-500 transition rounded-lg font-semibold"
+              className="px-6 py-3 bg-[#20603e] hover:bg-[#1a4d2f] transition rounded-lg font-semibold"
             >
               Sponsor a Child
             </a>
@@ -87,11 +82,10 @@ export default function HeroSection() {
           <button
             key={index}
             onClick={() => setCurrentSlide(index)}
-            className={`h-3 w-3 rounded-full transition ${
-              index === currentSlide
+            className={`h-3 w-3 rounded-full transition ${index === currentSlide
                 ? "bg-white"
                 : "bg-white/40 hover:bg-white/70"
-            }`}
+              }`}
           />
         ))}
       </div>

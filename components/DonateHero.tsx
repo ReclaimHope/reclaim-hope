@@ -12,18 +12,15 @@ export default function DonateHero() {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image with Overlay */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: "url('/programcta .png')",
-          // Fallback gradient if image doesn't load
-          background: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)"
+          backgroundImage: "url('/donate.JPG')",
         }}
       >
-        <div className="absolute inset-0 bg-black/50"></div>
       </div>
-
+      {/* Dark overlay */}
+      <div className="absolute inset-0 bg-black/10"></div>
       {/* Content */}
       <div className="relative z-10 text-center text-white px-4 max-w-4xl mx-auto">
         <div
@@ -49,7 +46,7 @@ export default function DonateHero() {
 
             <a
               href="#impact"
-              className="bg-white/10 backdrop-blur-md border border-white/30 hover:bg-white/20 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 hover:scale-105"
+              className="bg-[#001f3f] backdrop-blur-md border border-white/30 hover:bg-[#003366] text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 hover:scale-105"
             >
               See Our Impact
             </a>

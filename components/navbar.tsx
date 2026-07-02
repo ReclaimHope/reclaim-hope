@@ -12,7 +12,7 @@ const navItems = [
     { href: "/impact", label: "Impact" },
     { href: "/sponsor", label: "Sponsor" },
     { href: "/shop", label: "Shop" },
-    { href: "/MediaCenter", label: "Media center" },
+    // { href: "/MediaCenter", label: "Media center" },
     { href: "/contact", label: "Contact us" },
 ];
 

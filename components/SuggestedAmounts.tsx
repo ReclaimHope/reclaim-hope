@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 
 interface AmountOption {
   amount: number | 'custom';
+  icon: string;
   title: string;
   impact: string;
   popular?: boolean;
@@ -21,30 +22,35 @@ export default function SuggestedAmounts() {
 
   const amounts: AmountOption[] = [
     {
-      amount: 10,
-      title: '$10',
-      impact: 'School supplies for one day'
+      icon: '🏥',
+      amount: 15,
+      title: '$15',
+      impact: 'Healthy coverage per month for one child',
     },
     {
+      icon: '📚',
       amount: 25,
       title: '$25',
-      impact: 'School supplies for a child for one week'
+      impact: 'School supplies for a child for month'
     },
     {
-      amount: 50,
-      title: '$50',
+      icon: '🍽️',
+      amount: 40,
+      title: '$40',
       impact: 'Monthly nutrition support for one child'
     },
     {
-      amount: 100,
-      title: '$100',
+      icon: '🎓',
+      amount: 80,
+      title: '$80',
       impact: 'Educational support package for one child'
     },
     {
+      icon: '❤️',
       amount: 'custom',
-      title: 'Custom Amount',
+      title: 'Love gift',
       impact: 'Your choice, your impact'
-    }
+    } 
   ];
 
   return (
@@ -80,6 +86,7 @@ export default function SuggestedAmounts() {
               data-aos="fade-up"
               data-aos-delay={index * 100 + 400}
             >
+              <div className="text-4xl mb-4">{option.icon}</div>
               {option.popular && (
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                   <span className="bg-yellow-600 text-white px-3 py-1 rounded-full text-sm font-semibold">

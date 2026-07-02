@@ -12,12 +12,10 @@ export default function DonatePage() {
   return (
     <div className="min-h-screen">
       <DonateHero />
-      <WhyDonationsMatter />
-      {/* <DonationOptions /> */}
       <SuggestedAmounts />
       <DonationForm />
       <ImpactTransparency />
-      <DonateTestimonials />
+      {/* <DonateTestimonials /> */}
       <DonateFAQ />
       {/* <DonateFinalCTA /> */}
     </div>

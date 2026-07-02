@@ -83,7 +83,7 @@ export default function VolunteerSection() {
                     <div>
 
                         {/* LABEL */}
-                        <p className="text-green-600 uppercase tracking-[0.3em] font-semibold mb-6">
+                        <p className="text-[#001f3f] uppercase tracking-[0.3em] font-semibold mb-6">
                             Volunteer With Us
                         </p>
 
@@ -118,7 +118,7 @@ export default function VolunteerSection() {
 
                                         <div className="w-14 h-14 bg-green-100 rounded-2xl flex items-center justify-center mb-4">
 
-                                            <Icon className="w-7 h-7 text-green-600" />
+                                            <Icon className="w-7 h-7 text-[#001f3f]" />
 
                                         </div>
 
@@ -133,7 +133,7 @@ export default function VolunteerSection() {
                         </div>
 
                         {/* CTA BUTTON */}
-                        <Link href="/contact#contact-form" className="bg-green-500 hover:bg-green-600 transition duration-300 text-white px-10 py-4 rounded-full text-lg font-semibold shadow-xl hover:scale-105 inline-flex items-center justify-center text-center">
+                        <Link href="/contact#contact-form" className="bg-[#001f3f] hover:bg-[#00152a] transition duration-300 text-white px-10 py-4 rounded-full text-lg font-semibold shadow-xl hover:scale-105 inline-flex items-center justify-center text-center">
 
                             Join as Volunteer
 

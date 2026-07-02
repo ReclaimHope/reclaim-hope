@@ -50,7 +50,7 @@ export default function PartnershipSection() {
                     <div>
 
                         {/* LABEL */}
-                        <p className="text-purple-600 uppercase tracking-[0.3em] font-semibold mb-6">
+                        <p className="text-[#001f3f] uppercase tracking-[0.3em] font-semibold mb-6">
                             Partnership Opportunities
                         </p>
 
@@ -100,7 +100,7 @@ export default function PartnershipSection() {
                         </div>
 
                         {/* BUTTON */}
-                        <Link href="/contact#contact-form" className="bg-purple-600 hover:bg-purple-700 transition duration-300 text-white px-10 py-4 rounded-full text-lg font-semibold shadow-xl hover:scale-105 inline-flex items-center gap-3 justify-center">
+                        <Link href="/contact#contact-form" className="bg-[#001f3f] hover:bg-[#00152a] transition duration-300 text-white px-10 py-4 rounded-full text-lg font-semibold shadow-xl hover:scale-105 inline-flex items-center gap-3 justify-center">
 
                             Become a Partner
 
@@ -126,7 +126,7 @@ export default function PartnershipSection() {
                                     {/* ICON */}
                                     <div className="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center mb-6">
 
-                                        <Icon className="w-8 h-8 text-purple-600" />
+                                        <Icon className="w-8 h-8 text-[#001f3f]" />
 
                                     </div>
 

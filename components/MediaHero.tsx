@@ -8,9 +8,6 @@ export default function MediaHero() {
         backgroundPosition: "center",
       }}
     >
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-black/60" />
-
       {/* Content */}
       <div className="relative z-10 text-center max-w-4xl px-6">
 

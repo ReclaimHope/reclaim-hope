@@ -3,7 +3,7 @@ export default function ImpactHero() {
         <section
             className="relative w-full h-[110vh] bg-cover bg-bottom flex items-center justify-center px-6 md:px-16 overflow-hidden"
             style={{
-                backgroundImage: "url('/Impact 2.jpeg')",
+                backgroundImage: "url('/Impact Page.jpg')",
             }}
         >
             {/* CONTENT */}
