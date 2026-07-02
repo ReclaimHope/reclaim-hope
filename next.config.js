@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
   images: {
     formats: ['image/webp', 'image/avif'],
     qualities: [75, 85, 95],
@@ -12,12 +13,9 @@ const nextConfig = {
   },
   compress: true,
   poweredByHeader: false,
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   typescript: {
     ignoreBuildErrors: true,
-  }
+  },
 };
 
 module.exports = nextConfig;
