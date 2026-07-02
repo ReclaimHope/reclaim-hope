@@ -60,8 +60,6 @@ const SAMPLE_PRODUCTS: Product[] = [
     id: 'p6',
     title: 'Umugongo patterns dress',
     category: 'Apparel & Clothing',
-    title: 'Made in Rwanda white dress',
-    category: 'Apparel & Clothing',
     price: 22.0,
     image: '/white-dress.JPG',
     description: 'Elegant white dress made in Rwanda with traditional craftsmanship.'
