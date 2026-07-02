@@ -15,9 +15,7 @@ export default function DonatePage() {
       <SuggestedAmounts />
       <DonationForm />
       <ImpactTransparency />
-      {/* <DonateTestimonials /> */}
       <DonateFAQ />
-      {/* <DonateFinalCTA /> */}
     </div>
   );
 }
