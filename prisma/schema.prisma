@@ -8,15 +8,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 model Child {
-  id         String   @id @default(cuid())
-  name       String
-  age        Int
-  dream      String
-  imageUrl   String?
-  summary    String
-  story      String   @db.Text
-  sponsored  Boolean  @default(false)
-
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id          String   @id @default(cuid())
+  firstName   String
+  lastName    String
+  dob         DateTime
+  dream       String
+  imageUrl    String
+  status      String
+  story       String
+  createdAt   DateTime @default(now())
 }

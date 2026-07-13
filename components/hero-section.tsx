@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 
 const slides = [
   "/Home 1.JPG",
-  // "/Impact .jpg",
   "/Home 3.jpg",
   "/Home 4.jpg",
 ];
@@ -34,6 +33,7 @@ export default function HeroSection() {
             <Image
               src={slide}
               alt="Children in Rwanda receiving education and support from Reclaim Hope"
+              loading="eager"
               fill
               priority={index === 0}
               quality={85}

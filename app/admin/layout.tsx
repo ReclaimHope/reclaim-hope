@@ -7,8 +7,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <TooltipProvider>
       <SidebarProvider>
         <AppSidebar />
-        <main>
           <SidebarTrigger />
+        <main className="mx-auto w-full">
           {children}
         </main>
       </SidebarProvider>

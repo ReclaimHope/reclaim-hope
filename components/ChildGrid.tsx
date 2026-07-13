@@ -7,7 +7,6 @@ export interface Child {
   image: string;
   summary: string;
   story: string[];
-
   support?: string;
   goals?: string[];
   needs?: string[];

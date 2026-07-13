@@ -65,16 +65,16 @@ export default function DataTable({ data }: DataTableProps) {
   const rows = data ?? defaultData;
 
   return (
-    <div className="space-y-4 mx-auto px-4 max-w-7xl sm:px-6 lg:px-8">
+    <div className="mt-4 w-full">
       {/* Top Actions */}
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">Manage Children</h2>
-          <CreateChildDialog/>
+        <CreateChildDialog />
       </div>
 
       {/* Table */}
-      <div className="overflow-hidden rounded-lg border flex flex-col items-center w-[1050px]">
-        <Table>
+      <div className="overflow-hidden rounded-lg border w-[90%] mt-4 mx-auto">
+        <Table className="w-full"> 
           <TableHeader>
             <TableRow>
               <TableHead>Full name</TableHead>
@@ -82,7 +82,6 @@ export default function DataTable({ data }: DataTableProps) {
               <TableHead>Status</TableHead>
               <TableHead>Sponsor</TableHead>
               <TableHead>Reviewer</TableHead>
-              <TableHead>Action</TableHead>
             </TableRow>
           </TableHeader>
 
@@ -110,9 +109,8 @@ export default function DataTable({ data }: DataTableProps) {
                 </TableCell>
 
                 <TableCell>{item.target}</TableCell>
-                <TableCell>{item.reviewer}</TableCell>
-
                 <TableCell>
+                  {item.reviewer}
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button
@@ -124,12 +122,11 @@ export default function DataTable({ data }: DataTableProps) {
                     </DropdownMenuTrigger>
 
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem>Edit</DropdownMenuItem>
-                      <DropdownMenuItem>View</DropdownMenuItem>
-
+                      <DropdownMenuItem className="cursor-pointer bg-green-500 text-white">
+                        Edit
+                      </DropdownMenuItem>
                       <DropdownMenuSeparator />
-
-                      <DropdownMenuItem>
+                      <DropdownMenuItem className="cursor-pointer bg-red-500 text-white">
                         Delete
                       </DropdownMenuItem>
                     </DropdownMenuContent>
