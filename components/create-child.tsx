@@ -16,11 +16,48 @@ import { Plus } from "lucide-react"
 import { CheckCircle2, CircleOff } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
+import React from "react"
+import { toast } from "sonner"
+
 
 export function CreateChildDialog() {
+    enum SponsorshipStatus {
+        Sponsored = "sponsored",
+        NotSponsored = "not-sponsored",
+    }
+    const [sponsorshipStatus, setSponsorshipStatus] = React.useState<SponsorshipStatus>(SponsorshipStatus.NotSponsored)
+    const [isLoading, setIsLoading] = React.useState(false);
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        try {
+            setIsLoading(true);
+            const data = { ...Object.fromEntries(new FormData(e.currentTarget)), sponsorshipStatus };
+            const response = await fetch('/api/children', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
+            if (!response.ok) {
+                console.error("Error creating child:", result.error);
+                toast.error("Failed to create child. Please try again.");
+            } else {
+                toast.success("Child created successfully!");
+                e.currentTarget.reset();
+                setSponsorshipStatus(SponsorshipStatus.NotSponsored);
+            }
+        } catch (error) {
+            console.error("Error creating child:", error);
+            toast.error("Failed to create child. Please try again.");
+        } finally {
+            setIsLoading(false);
+        }
+    }
     return (
         <Dialog>
-            <form>
+            <form onSubmit={handleSubmit}>
                 <DialogTrigger asChild>
                     <Button
                         className="bg-black text-white cursor-pointer hover:bg-gray-500 hover:text-white"
@@ -41,20 +78,29 @@ export function CreateChildDialog() {
 
                     <FieldGroup className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <Field>
-                            <Label htmlFor="names">Names</Label>
+                            <Label htmlFor="firstName">First Name</Label>
                             <Input
-                                id="names"
-                                placeholder="Enter child's names"
+                                id="firstName"
+                                name="firstName"
+                                placeholder="Enter child's first name"
+                            />
+                        </Field>
+                        <Field>
+                            <Label htmlFor="lastName">Last Name</Label>
+                            <Input
+                                id="lastName"
+                                name="lastName"
+                                placeholder="Enter child's last name"
                             />
                         </Field>
 
                         <Field>
-                            <Label htmlFor="age">Age</Label>
+                            <Label htmlFor="age">Date of Birth</Label>
                             <Input
                                 id="age"
-                                type="number"
-                                min={1}
-                                placeholder="Enter age"
+                                type="date"
+                                name="dateOfBirth"
+                                placeholder="Enter date of birth"
                             />
                         </Field>
 
@@ -62,6 +108,7 @@ export function CreateChildDialog() {
                             <Label htmlFor="dream">Dream</Label>
                             <Input
                                 id="dream"
+                                name="dream"
                                 placeholder="Dream profession"
                             />
                         </Field>
@@ -70,6 +117,7 @@ export function CreateChildDialog() {
                             <Label htmlFor="imageUrl">Image Link</Label>
                             <Input
                                 id="imageUrl"
+                                name="imageUrl"
                                 type="url"
                                 placeholder="https://..."
                             />
@@ -77,7 +125,7 @@ export function CreateChildDialog() {
                         <Field>
                             <Label htmlFor="status">Sponsorship Status</Label>
 
-                            <Select>
+                            <Select value={sponsorshipStatus} onValueChange={(value) => setSponsorshipStatus(value as SponsorshipStatus)}>
                                 <SelectTrigger>
                                     <SelectValue placeholder="Select status" />
                                 </SelectTrigger>
@@ -103,6 +151,7 @@ export function CreateChildDialog() {
                             <Label htmlFor="summary">Summary</Label>
                             <Textarea
                                 id="summary"
+                                name="summary"
                                 rows={3}
                                 placeholder="Short summary..."
                             />
@@ -112,6 +161,7 @@ export function CreateChildDialog() {
                             <Label htmlFor="story">Story</Label>
                             <Textarea
                                 id="story"
+                                name="story"
                                 rows={10}
                                 placeholder="Tell the child's story..."
                             />

@@ -9,7 +9,7 @@ datasource db {
 }
 model Child {
   id         String   @id @default(cuid())
-  name       String
+  first       String
   age        Int
   dream      String
   imageUrl   String?
