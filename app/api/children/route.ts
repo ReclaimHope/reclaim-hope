@@ -1,25 +1,46 @@
-import { Prisma } from "@/lib/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
-export default async function POST(req: NextRequest) {
-   try{
-     const body = await req.json();
-    const { firstName, lastName, dateOfBirth, dream, imageUrl, summary, story, sponsorshipStatus } = body;
-    const user = await prisma.user.create({
-        data: {
-            firstName,
-            lastName,
-            dateOfBirth: new Date(dateOfBirth),
-            dream,
-            imageUrl,
-            summary,
-            story,
-            sponsorshipStatus
-        }
+export async function POST(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const {
+      firstName,
+      lastName,
+      dateOfBirth,
+      dream,
+      imageUrl,
+      summary,
+      story,
+      sponsorshipStatus,
+    } = body;
+
+    if (!firstName || !lastName || !dateOfBirth || !dream || !summary || !story) {
+      return NextResponse.json(
+        { success: false, error: "Please fill in all required fields." },
+        { status: 400 }
+      );
+    }
+
+    const child = await prisma.child.create({
+      data: {
+        firstName,
+        lastName,
+        dateOfBirth: new Date(dateOfBirth),
+        dream,
+        imageUrl: imageUrl || null,
+        summary,
+        story,
+        sponsorshipStatus: sponsorshipStatus === "Sponsored" ? "Sponsored" : "NotSponsored",
+      },
     });
-   } catch (error) {
+
+    return NextResponse.json({ success: true, child }, { status: 201 });
+  } catch (error) {
     console.error("Error creating child:", error);
-    return new NextResponse(JSON.stringify({ error: "Failed to create child" }), { status: 500 });
-   }
+    return NextResponse.json(
+      { success: false, error: "Failed to create child." },
+      { status: 500 }
+    );
+  }
 }

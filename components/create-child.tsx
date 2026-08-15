@@ -18,20 +18,36 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 import React from "react"
 import { toast } from "sonner"
+import {useRouter} from "next/navigation"
 
 
 export function CreateChildDialog() {
     enum SponsorshipStatus {
-        Sponsored = "sponsored",
-        NotSponsored = "not-sponsored",
+        Sponsored = "Sponsored",
+        NotSponsored = "NotSponsored",
     }
     const [sponsorshipStatus, setSponsorshipStatus] = React.useState<SponsorshipStatus>(SponsorshipStatus.NotSponsored)
     const [isLoading, setIsLoading] = React.useState(false);
+    const router = useRouter();
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         try {
             setIsLoading(true);
-            const data = { ...Object.fromEntries(new FormData(e.currentTarget)), sponsorshipStatus };
+            const formData = new FormData(e.currentTarget);
+            const firstName = String(formData.get("firstName") ?? "").trim();
+            const lastName = String(formData.get("lastName") ?? "").trim();
+            const dateOfBirth = String(formData.get("dateOfBirth") ?? "").trim();
+            const dream = String(formData.get("dream") ?? "").trim();
+            const imageUrl = String(formData.get("imageUrl") ?? "").trim();
+            const summary = String(formData.get("summary") ?? "").trim();
+            const story = String(formData.get("story") ?? "").trim();
+
+            if (!firstName || !lastName || !dateOfBirth || !dream || !summary || !story) {
+                toast.error("Please fill in all required fields.");
+                return;
+            }
+
+            const data = { firstName, lastName, dateOfBirth, dream, imageUrl, summary, story, sponsorshipStatus };
             const response = await fetch('/api/children', {
                 method: 'POST',
                 headers: {
@@ -45,8 +61,9 @@ export function CreateChildDialog() {
                 toast.error("Failed to create child. Please try again.");
             } else {
                 toast.success("Child created successfully!");
-                e.currentTarget.reset();
+                router.refresh();
                 setSponsorshipStatus(SponsorshipStatus.NotSponsored);
+                
             }
         } catch (error) {
             console.error("Error creating child:", error);
@@ -57,18 +74,19 @@ export function CreateChildDialog() {
     }
     return (
         <Dialog>
-            <form onSubmit={handleSubmit}>
-                <DialogTrigger asChild>
-                    <Button
-                        className="bg-black text-white cursor-pointer hover:bg-gray-500 hover:text-white"
-                        variant="outline"
-                    >
-                        <Plus />
-                        Create Child
-                    </Button>
-                </DialogTrigger>
+            <DialogTrigger asChild>
+                <Button
+                    type="button"
+                    className="bg-black text-white cursor-pointer hover:bg-gray-500 hover:text-white"
+                    variant="outline"
+                >
+                    <Plus />
+                    Create Child
+                </Button>
+            </DialogTrigger>
 
-                <DialogContent className="w-[90vw] md:w-[70vw] max-w-none">
+            <DialogContent className="w-[90vw] md:w-[70vw] max-w-none">
+                <form onSubmit={handleSubmit}>
                     <DialogHeader>
                         <DialogTitle>Add a Child</DialogTitle>
                         <DialogDescription>
@@ -131,14 +149,14 @@ export function CreateChildDialog() {
                                 </SelectTrigger>
 
                                 <SelectContent>
-                                    <SelectItem value="sponsored">
+                                    <SelectItem value={SponsorshipStatus.Sponsored}>
                                         <div className="flex items-center gap-2">
                                             <CheckCircle2 className="h-4 w-4 text-green-600" />
                                             <span>Sponsored</span>
                                         </div>
                                     </SelectItem>
 
-                                    <SelectItem value="not-sponsored">
+                                    <SelectItem value={SponsorshipStatus.NotSponsored}>
                                         <div className="flex items-center gap-2">
                                             <CircleOff className="h-4 w-4 text-gray-500" />
                                             <span>Not Sponsored</span>
@@ -170,17 +188,17 @@ export function CreateChildDialog() {
 
                     <DialogFooter>
                         <DialogClose asChild>
-                            <Button variant="outline">
+                            <Button type="button" variant="outline">
                                 Cancel
                             </Button>
                         </DialogClose>
 
-                        <Button type="submit">
-                            Save Child
+                        <Button type="submit" disabled={isLoading}>
+                            {isLoading ? "Saving..." : "Save Child"}
                         </Button>
                     </DialogFooter>
-                </DialogContent>
-            </form>
+                </form>
+            </DialogContent>
         </Dialog>
     )
 }

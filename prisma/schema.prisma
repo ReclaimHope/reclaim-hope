@@ -2,6 +2,10 @@ generator client {
   provider = "prisma-client"
   output   = "../lib/generated/prisma"
 }
+enum SponsorshipStatus {
+        Sponsored
+        NotSponsored
+    }
 
 datasource db {
   provider = "postgresql"
@@ -9,13 +13,14 @@ datasource db {
 }
 model Child {
   id         String   @id @default(cuid())
-  first       String
-  age        Int
+  firstName       String
+  lastName   String
+  dateOfBirth DateTime
   dream      String
   imageUrl   String?
   summary    String
   story      String   @db.Text
-  sponsored  Boolean  @default(false)
+  sponsorshipStatus  SponsorshipStatus  @default(NotSponsored)
 
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt

@@ -4,6 +4,7 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import AOSInit from "@/components/AOSInit";
 import ConditionalNavFooter from "@/components/ConditionalNavFooter";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -143,6 +144,7 @@ export default function RootLayout({
         <ConditionalNavFooter>
           {children}
         </ConditionalNavFooter>
+        <Toaster richColors position="top-right" />
       </body>
     </html>
   );
