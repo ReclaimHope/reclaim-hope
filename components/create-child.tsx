@@ -18,7 +18,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 import React from "react"
 import { toast } from "sonner"
-import {useRouter} from "next/navigation"
+import { useRouter } from "next/navigation"
+import useSWR, {mutate} from "swr"
 
 
 export function CreateChildDialog() {
@@ -26,9 +27,11 @@ export function CreateChildDialog() {
         Sponsored = "Sponsored",
         NotSponsored = "NotSponsored",
     }
-    const [sponsorshipStatus, setSponsorshipStatus] = React.useState<SponsorshipStatus>(SponsorshipStatus.NotSponsored)
+    const [sponsorshipStatus, setSponsorshipStatus] = React.useState<SponsorshipStatus>
+    (SponsorshipStatus.NotSponsored)
     const [isLoading, setIsLoading] = React.useState(false);
     const router = useRouter();
+    const [isOpen, setIsOpen] = React.useState(false);
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         try {
@@ -61,9 +64,11 @@ export function CreateChildDialog() {
                 toast.error("Failed to create child. Please try again.");
             } else {
                 toast.success("Child created successfully!");
-                router.refresh();
                 setSponsorshipStatus(SponsorshipStatus.NotSponsored);
-                
+                mutate('/api/children');
+                setIsOpen(false);
+                router.refresh();
+
             }
         } catch (error) {
             console.error("Error creating child:", error);
@@ -73,11 +78,11 @@ export function CreateChildDialog() {
         }
     }
     return (
-        <Dialog>
-            <DialogTrigger asChild>
+        <Dialog open={isOpen} onOpenChange={(open) => setIsOpen(open)}>
+            <DialogTrigger asChild onClick={() => setIsOpen(true)}>
                 <Button
                     type="button"
-                    className="bg-black text-white cursor-pointer hover:bg-gray-500 hover:text-white"
+                    className="bg-black text-white cursor-pointer hover:bg-gray-500  hover:text-white"
                     variant="outline"
                 >
                     <Plus />

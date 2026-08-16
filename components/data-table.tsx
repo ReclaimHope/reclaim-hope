@@ -28,48 +28,27 @@ import {
 } from "@/components/ui/table";
 import { Dialog } from "./ui/dialog";
 import { CreateChildDialog } from "./create-child";
+import useSWR from "swr";
 
-type DataTableItem = {
-  id: number;
-  header: string;
-  type: string;
-  status: string;
-  target: string;
-  reviewer: string;
-};
-
-const defaultData: DataTableItem[] = [
-  {
-    id: 1,
-    header: "Hero Section",
-    type: "Landing Page",
-    status: "Done",
-    target: "100",
-    reviewer: "John Doe",
-  },
-  {
-    id: 2,
-    header: "About Section",
-    type: "Content",
-    status: "In Progress",
-    target: "80",
-    reviewer: "Jane Smith",
-  },
-];
-
-interface DataTableProps {
-  data?: DataTableItem[];
-}
-
-export default function DataTable({ data }: DataTableProps) {
-  const rows = data ?? defaultData;
-
+export default function DataTable() {
+  const fetcher = (url: string) => fetch(url).then((res) => res.json());
+  const getAge = (dateOfBirth: string) => {
+    const birthDate = new Date(dateOfBirth);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDifference = today.getMonth() - birthDate.getMonth();
+    if (monthDifference < 0) {
+      age--;
+    }
+    return age;
+  };
+  const { data, error, isLoading: isFetching } = useSWR('/api/children', fetcher);
   return (
     <div className="space-y-4 mx-auto px-4 max-w-7xl sm:px-6 lg:px-8">
       {/* Top Actions */}
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">Manage Children</h2>
-          <CreateChildDialog/>
+        <CreateChildDialog />
       </div>
 
       {/* Table */}
@@ -81,62 +60,46 @@ export default function DataTable({ data }: DataTableProps) {
               <TableHead>Age</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Sponsor</TableHead>
-              <TableHead>Reviewer</TableHead>
               <TableHead>Action</TableHead>
             </TableRow>
           </TableHeader>
 
           <TableBody>
-            {rows.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell className="font-medium">
-                  {item.header}
-                </TableCell>
-
-                <TableCell>
-                  <Badge variant="outline">
-                    {item.type}
-                  </Badge>
-                </TableCell>
-
-                <TableCell>
-                  <Badge
-                    variant="outline"
-                    className="flex w-fit items-center gap-1"
-                  >
-                    <CheckCircle2 className="size-4 text-green-500" />
-                    {item.status}
-                  </Badge>
-                </TableCell>
-
-                <TableCell>{item.target}</TableCell>
-                <TableCell>{item.reviewer}</TableCell>
-
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                      >
-                        <MoreVertical />
-                      </Button>
-                    </DropdownMenuTrigger>
-
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>Edit</DropdownMenuItem>
-                      <DropdownMenuItem>View</DropdownMenuItem>
-
-                      <DropdownMenuSeparator />
-
-                      <DropdownMenuItem>
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
+            {
+              isFetching ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center"> Loading...</TableCell>
+                </TableRow>
+              ) : error ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center"> Error loading data</TableCell>
+                </TableRow>
+              ) : data.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center"> No children found</TableCell>
+                </TableRow>
+              ) : data.map((child: any) => (
+                <TableRow key={child.id}>
+                  <TableCell>{child.firstName} {child.lastName}</TableCell>
+                  <TableCell>{getAge(child.dateOfBirth)}</TableCell>
+                  <TableCell>{child.sponsorshipStatus}</TableCell>
+                  <TableCell>{child.sponsorName || "Not sponsored"}</TableCell>
+                  <TableCell>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                          <MoreVertical className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem>Edit</DropdownMenuItem>
+                        <DropdownMenuItem>Delete</DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              )
+              )}
           </TableBody>
         </Table>
       </div>

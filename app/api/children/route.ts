@@ -44,3 +44,16 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+
+export async function GET() {
+  try {
+    const children = await prisma.child.findMany();
+    return NextResponse.json(children, { status: 200 });
+  } catch (error) {
+    console.error("Error fetching children:", error);
+    return NextResponse.json(
+      { success: false, error: "Failed to fetch children." },
+      { status: 500 }
+    );
+  }
+}
