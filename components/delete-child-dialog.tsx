@@ -35,7 +35,12 @@ export default function DeleteChildDialog({ id }: { id: string }) {
 
       toast.success("Child deleted successfully!")
       await mutate("/api/children")
-    } finally {
+    } catch (error) {
+      console.error("Error deleting child:", error)
+      toast.error("Failed to delete child. Please try again.")
+      setIsDeleting(false)
+    } 
+    finally {
       setIsDeleting(false)
     }
   }
