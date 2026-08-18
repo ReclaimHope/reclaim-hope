@@ -29,6 +29,7 @@ import {
 import { Dialog } from "./ui/dialog";
 import { CreateChildDialog } from "./create-child";
 import useSWR from "swr";
+import DeleteChildDialog from "./delete-child-dialog";
 
 export default function DataTable() {
   const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -93,7 +94,7 @@ export default function DataTable() {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem>Edit</DropdownMenuItem>
-                        <DropdownMenuItem>Delete</DropdownMenuItem>
+                        <DeleteChildDialog id={child.id} />
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
