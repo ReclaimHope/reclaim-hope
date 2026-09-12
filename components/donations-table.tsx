@@ -21,7 +21,6 @@ type Donation = {
   id: string;
   amount: number;
   currency: string;
-  category: string;
   status: string;
   createdAt: string;
   donor: { name: string; email: string; country: string | null } | null;
@@ -55,7 +54,6 @@ export function DonationsTable({ donations }: { donations: Donation[] }) {
     [
       donation.donor?.name ?? "Anonymous donor",
       donation.donor?.email ?? "",
-      donation.category,
       donation.status,
       donation.latestPayment?.reference ?? "",
     ].some((value) => value.toLowerCase().includes(search.toLowerCase()))
@@ -123,12 +121,10 @@ export function DonationsTable({ donations }: { donations: Donation[] }) {
           <TableHeader>
             <TableRow>
               <TableHead>Donor</TableHead>
-              <TableHead>Purpose</TableHead>
               <TableHead>Amount</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead>Payment reference</TableHead>
+              <TableHead>Last paymentd</TableHead>
               <TableHead>Date</TableHead>
-              <TableHead className="text-right">Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -145,7 +141,6 @@ export function DonationsTable({ donations }: { donations: Donation[] }) {
                     <div className="font-medium">{donation.donor?.name || "Anonymous donor"}</div>
                     <div className="text-xs text-muted-foreground">{donation.donor?.email || "No email provided"}</div>
                   </TableCell>
-                  <TableCell className="whitespace-nowrap">{statusLabel(donation.category.replace("_", " "))}</TableCell>
                   <TableCell className="whitespace-nowrap font-medium">{formatAmount(donation.amount, donation.currency)}</TableCell>
                   <TableCell>
                     <Badge

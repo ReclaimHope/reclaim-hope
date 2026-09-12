@@ -4,23 +4,22 @@ import { useState } from "react";
 import { Building2, CreditCard, LockKeyhole } from "lucide-react";
 import { toast } from "sonner";
 type Frequency = "one-time" | "annually";
-type DonationPaymentMethod = "CARD" | "BANK" | "MOBILE"
+type Currency = "USD" | "RWF";
 
 export default function DonationForm() {
-  const [amount, setAmount] = useState("50");
+  const [amount, setAmount] = useState("");
   const [frequency, setFrequency] = useState<Frequency>("one-time");
-  const [paymentMethod, setPaymentMethod] =
-    useState<DonationPaymentMethod>("CARD");
   const [isLoading, setIsLoading] = useState(false);
+  const [currency, setCurrency] = useState<Currency>("USD");
   const [invoiceNumber, setInvoiceNumber] = useState<string | null>(null);
   const [donor, setDonor] = useState({
     firstName: "",
     lastName: "",
     email: "",
     phoneNumber: "",
+    homeAddress: "",
     message: "",
   });
-  const currency = paymentMethod === "CARD" ? "USD" : "RWF";
 
   const updateDonor = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -32,6 +31,10 @@ export default function DonationForm() {
   const  handleSubmit = async (e: React.FormEvent<HTMLFormElement>)=>{
     e.preventDefault()
     const data = new FormData(e.currentTarget)
+    if (!amount || !donor.firstName || !donor.lastName || !donor.email|| !donor.phoneNumber || !donor.email ) {
+      toast.error("Please fill in all required fields.")
+      return
+    }
     data.append("amount", amount)
     data.append("frequency", frequency)
     data.append("currency", currency)
@@ -39,7 +42,9 @@ export default function DonationForm() {
     data.append("lastName", donor.lastName)
     data.append("email", donor.email)
     data.append("phoneNumber", donor.phoneNumber)
+    data.append("homeAddress", donor.homeAddress)
     data.append("message", donor.message)
+    console.log({FormData})
 
     setIsLoading(true)
     try {
@@ -75,18 +80,39 @@ export default function DonationForm() {
         <form onSubmit={handleSubmit} className="space-y-4 text-[#003D5C]">
           <div>
             <label
+              htmlFor="currency"
+              className="mb-1.5 block text-[13px] font-medium"
+            >
+              Currency
+            </label>
+            <select
+              id="currency"
+              value={currency}
+              onChange={(event) =>
+                setCurrency(event.target.value as Currency)
+              }
+              className="h-9 w-full rounded-[4px] border border-[#9fc3ff] bg-[#eff5fc] px-2 text-xs outline-none focus:ring-2 focus:ring-[#0099CC]/30"
+            >
+              <option value="USD">US Dollar</option>
+              <option value="RWF">Rwandan Franc</option>
+            </select>
+          </div>
+          <div>
+            <label
               htmlFor="donation-amount"
               className="mb-1.5 block text-[13px] font-medium"
             >
               Donation Amount
             </label>
             <div className="flex h-11 items-center rounded-[3px] border border-[#9fc3ff] bg-[#eff5fc] px-3 focus-within:ring-2 focus-within:ring-[#0099CC]/30">
-              <span className="mr-2 text-xl leading-none">$</span>
+              <span className="mr-2 text-xl leading-none">{currency === "USD" ? "$" : "RWF"}</span>
               <input
                 id="donation-amount"
                 type="number"
                 min="1"
                 value={amount}
+                required
+                placeholder="Enter amount"
                 onChange={(event) => setAmount(event.target.value)}
                 className="min-w-0 flex-1 bg-transparent text-base text-[#8090a6] outline-none"
                 aria-label="Donation amount in US dollars"
@@ -151,28 +177,26 @@ export default function DonationForm() {
             onChange={updateDonor}
             required
           />
-          {paymentMethod === "CARD" && (
-            <Field
-              label="Phone number (optional)"
-              name="phoneNumber"
-              placeholder="Area code + number"
-              value={donor.phoneNumber}
-              onChange={updateDonor}
-            />
-          )}
+          <Field
+            label="Home Address"
+            name="homeAddress"
+            placeholder="Home Address"
+            value={donor.homeAddress}
+            onChange={updateDonor}
+          />
           <div>
             <label
               htmlFor="donation-message"
               className="mb-1.5 block text-[13px]"
             >
-              Comment
+              Message for children (optional)
             </label>
             <textarea
               id="donation-message"
               name="message"
               value={donor.message}
               onChange={updateDonor}
-              placeholder="Comment"
+              placeholder="Message"
               rows={3}
               className="w-full resize-y rounded-[4px] border border-[#9fc3ff] bg-[#eff5fc] px-2 py-2 text-xs outline-none placeholder:text-[#aeb9c8] focus:ring-2 focus:ring-[#0099CC]/30"
             />

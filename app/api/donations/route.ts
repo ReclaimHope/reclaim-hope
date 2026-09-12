@@ -1,6 +1,7 @@
 import { Donor } from "@/lib/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+type currency = "USD" | "RWF";
 
 export async function GET() {
   try {
@@ -63,7 +64,8 @@ export async function POST(request: Request) {
     const email = data.get("email") as string;  
     const phoneNumber = data.get("phoneNumber") as string;
     const amount = Number(data.get("amount"));
-    const currency = "USD"; // Default to USD for now, you can change this based on your requirements
+    const currency = data.get("currency") as currency;
+    const address = data.get("homeAddress") as string;
 
     console.log("Received donation data:", {
       firstName,
@@ -72,6 +74,7 @@ export async function POST(request: Request) {
       phoneNumber,
       amount,
       currency,
+      address,
     });
     const donor = await prisma.donor.create({
       data: {
@@ -79,6 +82,7 @@ export async function POST(request: Request) {
         lastName,
         email,
         phoneNumber,
+        address,
       },
     });
 
@@ -90,7 +94,7 @@ export async function POST(request: Request) {
       },
     });
 
-   const invoiceData = await createIpayInvoice({ donor }, amount, "USD", donation.id);
+   const invoiceData = await createIpayInvoice({ donor }, amount, currency, donation.id);
 
    console.log("Invoice Data:", invoiceData);
 
@@ -140,7 +144,7 @@ async function createIpayInvoice(
       {
         unitAmount: amount,
         quantity: 1,
-        code: process.env.IPAY_PRODUCT_IDENTIFIER_USD,
+        code: currency === "RWF" ? process.env.IPAY_PRODUCT_IDENTIFIER_RWF : process.env.IPAY_PRODUCT_IDENTIFIER_USD,
       },
     ],
     description: `testing donations sandbox`,
