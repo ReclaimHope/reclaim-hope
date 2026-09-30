@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import ChildGrid, { ChildItem, children as defaultList } from "@/components/ChildGrid";
+import ChildGrid, { ChildItem } from "@/components/ChildGrid";
 import FeaturedChild, { ChildProfile } from "@/components/FeaturedChild";
 import SponsorHero from "@/components/SponsorHero";
 import SponsorshipSection from "@/components/SponsorshipSection";
@@ -40,21 +40,23 @@ function SponsorPageContent() {
           sponsorName: c.sponsorName,
         };
       })
-    : defaultList;
+    : [];
 
-  const defaultChildId = childList[0]?.id || "matambi-shakira";
-  const [selectedChildStateId, setSelectedChildStateId] = useState(defaultChildId);
+  const [selectedChildStateId, setSelectedChildStateId] = useState<string | null>(null);
 
   // Sync state if query param or list changes
   useEffect(() => {
     if (queryChildId && childList.some((child) => child.id === queryChildId)) {
       setSelectedChildStateId(queryChildId);
       featuredRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else if (!selectedChildStateId && childList.length > 0) {
+      setSelectedChildStateId(childList[0].id);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queryChildId, childList]);
 
   const selectedChild =
-    childList.find((child) => child.id === selectedChildStateId) ?? childList[0];
+    childList.find((child) => child.id === selectedChildStateId) ?? childList[0] ?? null;
 
   const toChildProfile = (c: ChildItem): ChildProfile => ({
     id: c.id,
@@ -83,7 +85,18 @@ function SponsorPageContent() {
 
       {/* Featured Child Detail View */}
       <div ref={featuredRef} className="scroll-mt-10">
-        {selectedChild && <FeaturedChild child={toChildProfile(selectedChild)} />}
+        {isLoading ? (
+          <div className="py-16 text-center text-gray-500">Loading children...</div>
+        ) : selectedChild ? (
+          <FeaturedChild child={toChildProfile(selectedChild)} />
+        ) : (
+          <div className="mx-auto max-w-md px-4 py-16 text-center">
+            <h2 className="text-2xl font-bold text-gray-900">No children listed yet</h2>
+            <p className="mt-2 text-sm text-gray-600">
+              There are currently no children available for sponsorship. Please check back soon.
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Child Browsing Grid */}

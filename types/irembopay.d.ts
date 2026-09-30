@@ -1,11 +1,22 @@
 declare module '@irembo/irembopay-node-sdk' {
-  interface InvoiceApi {
-    createInvoice(data: unknown): Promise<unknown>
-  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const IremboPay: any;
+  export default IremboPay;
+}
 
-  export default class IremboPay {
-    invoice: InvoiceApi
-
-    constructor(secretKey?: string, environment?: string)
-  }
+interface Window {
+  IremboPay?: {
+    initiate: (options: {
+      publicKey: string;
+      invoiceNumber: string;
+      locale?: string;
+      callback?: (error: unknown, response: unknown) => void;
+    }) => void;
+    closeModal: () => void;
+    locale: {
+      EN: string;
+      FR: string;
+      RW: string;
+    };
+  };
 }

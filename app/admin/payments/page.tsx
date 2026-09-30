@@ -48,7 +48,7 @@ export default async function PaymentsPage() {
         email: donor.email,
       } : null,
       source: payment.donation
-        ? `Donation: ${payment.donation.category.replace("_", " ")}`
+        ? `Donation: ${payment.donation.category ? payment.donation.category.replace("_", " ") : "General"}`
         : sponsorshipChild
           ? `Sponsorship: ${sponsorshipChild.firstName} ${sponsorshipChild.lastName}`
           : "Unlinked payment",

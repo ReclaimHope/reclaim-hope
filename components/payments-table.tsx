@@ -1,14 +1,11 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { CheckCircle2, Clock3, CreditCard, Search, WalletCards } from "lucide-react";
-import { verifyPaymentAction } from "@/app/actions/sponsorship";
+import { useState } from "react";
+import { Clock3, CreditCard, Search, WalletCards } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { toast } from "sonner";
 
 type Payment = {
   id: string;
@@ -34,8 +31,6 @@ function label(value: string) {
 
 export function PaymentsTable({ payments }: { payments: Payment[] }) {
   const [search, setSearch] = useState("");
-  const [isVerifying, startVerification] = useTransition();
-  const [processingId, setProcessingId] = useState<string | null>(null);
   const successful = payments.filter((payment) => payment.status === "SUCCESSFUL");
   const pending = payments.filter((payment) => payment.status === "PENDING");
   const filteredPayments = payments.filter((payment) => [
@@ -46,20 +41,6 @@ export function PaymentsTable({ payments }: { payments: Payment[] }) {
     payment.source,
     payment.status,
   ].some((value) => value.toLowerCase().includes(search.toLowerCase())));
-
-  function handleVerify(paymentId: string) {
-    setProcessingId(paymentId);
-    startVerification(async () => {
-      const result = await verifyPaymentAction(paymentId);
-      if (result.success) {
-        toast.success("Payment marked as successful.");
-        window.location.reload();
-      } else {
-        toast.error(result.error || "Failed to verify payment.");
-        setProcessingId(null);
-      }
-    });
-  }
 
   return (
     <div className="mx-auto w-full max-w-7xl space-y-6">
@@ -103,7 +84,7 @@ export function PaymentsTable({ payments }: { payments: Payment[] }) {
                 <TableCell className="whitespace-nowrap font-medium">{formatAmount(payment.amount, payment.currency)}</TableCell>
                 <TableCell><Badge variant={payment.status === "SUCCESSFUL" ? "default" : payment.status === "PENDING" ? "outline" : "secondary"} className={payment.status === "SUCCESSFUL" ? "bg-emerald-600 hover:bg-emerald-600" : payment.status === "PENDING" ? "border-amber-300 bg-amber-50 text-amber-800" : ""}>{label(payment.status)}</Badge></TableCell>
                 <TableCell className="whitespace-nowrap text-sm text-muted-foreground">{payment.paidAt ? new Date(payment.paidAt).toLocaleDateString() : "Not paid"}</TableCell>
-                <TableCell className="text-right">{payment.status === "PENDING" ? <Button size="sm" disabled={isVerifying && processingId === payment.id} onClick={() => handleVerify(payment.id)}><CheckCircle2 className="size-4" />{isVerifying && processingId === payment.id ? "Verifying" : "Verify"}</Button> : payment.status === "SUCCESSFUL" ? <span className="text-xs font-medium text-emerald-700">Successful</span> : null}</TableCell>
+                <TableCell className="text-right">{payment.status === "SUCCESSFUL" ? <span className="text-xs font-medium text-emerald-700">Successful</span> : <span className="text-xs text-muted-foreground">Awaiting IremboPay</span>}</TableCell>
               </TableRow>
             ))}
           </TableBody>

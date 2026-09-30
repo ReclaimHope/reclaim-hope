@@ -1,10 +1,8 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { CheckCircle2, Clock3, HandCoins, Heart, Search } from "lucide-react";
-import { verifyPaymentAction } from "@/app/actions/sponsorship";
+import { useState } from "react";
+import { Clock3, HandCoins, Heart, Search } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
@@ -15,7 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { toast } from "sonner";
+
 
 type Donation = {
   id: string;
@@ -46,8 +44,6 @@ function statusLabel(status: string) {
 
 export function DonationsTable({ donations }: { donations: Donation[] }) {
   const [search, setSearch] = useState("");
-  const [isVerifying, startVerification] = useTransition();
-  const [processingId, setProcessingId] = useState<string | null>(null);
   const completed = donations.filter((donation) => donation.status === "COMPLETED");
   const pending = donations.filter((donation) => donation.status === "PENDING");
   const filteredDonations = donations.filter((donation) =>
@@ -58,20 +54,6 @@ export function DonationsTable({ donations }: { donations: Donation[] }) {
       donation.latestPayment?.reference ?? "",
     ].some((value) => value.toLowerCase().includes(search.toLowerCase()))
   );
-
-  function handleVerify(paymentId: string) {
-    setProcessingId(paymentId);
-    startVerification(async () => {
-      const result = await verifyPaymentAction(paymentId);
-      if (result.success) {
-        toast.success("Donation marked as completed.");
-        window.location.reload();
-      } else {
-        toast.error(result.error || "Failed to verify donation.");
-        setProcessingId(null);
-      }
-    });
-  }
 
   return (
     <div className="mx-auto w-full max-w-7xl space-y-6">
@@ -162,18 +144,11 @@ export function DonationsTable({ donations }: { donations: Donation[] }) {
                     {new Date(donation.createdAt).toLocaleDateString()}
                   </TableCell>
                   <TableCell className="text-right">
-                    {donation.status === "PENDING" && donation.latestPayment ? (
-                      <Button
-                        size="sm"
-                        disabled={isVerifying && processingId === donation.latestPayment.id}
-                        onClick={() => handleVerify(donation.latestPayment!.id)}
-                      >
-                        <CheckCircle2 className="size-4" />
-                        {isVerifying && processingId === donation.latestPayment.id ? "Verifying" : "Verify"}
-                      </Button>
-                    ) : donation.status === "COMPLETED" ? (
+                    {donation.status === "COMPLETED" ? (
                       <span className="text-xs font-medium text-emerald-700">Complete</span>
-                    ) : null}
+                    ) : (
+                      <span className="text-xs text-muted-foreground">Awaiting IremboPay</span>
+                    )}
                   </TableCell>
                 </TableRow>
               ))
