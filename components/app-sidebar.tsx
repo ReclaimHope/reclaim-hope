@@ -31,41 +31,49 @@ import { GoSponsorTiers } from "react-icons/go"
 import { Button } from "./ui/button"
 import Image from "next/image"
 import { logoutAction } from "@/app/actions/auth"
+import useSWR from "swr"
 
-const sections: NavSection[] = [
-  {
-    label: "Overview",
-    items: [
-      { title: "Dashboard", url: "/admin", icon: <LayoutDashboardIcon /> },
-    ],
-  },
-  {
-    label: "Fundraising",
-    items: [
-      { title: "Sponsors", url: "/admin/sponsors", icon: <GoSponsorTiers /> },
-      { title: "Donors", url: "/admin/donors", icon: <UsersRound /> },
-      { title: "Donations", url: "/admin/donations", icon: <HandCoins /> },
-      { title: "Payments", url: "/admin/payments", icon: <CreditCard /> },
-    ],
-  },
-  {
-    label: "Content",
-    items: [
-      { title: "Children", url: "/admin/children", icon: <FaChild /> },
-      { title: "Newsletters", url: "/admin/newsletters", icon: <Mail /> },
-      { title: "Reports", url: "/admin/reports", icon: <ClipboardList /> },
-    ],
-  },
-  {
-    label: "System",
-    items: [
-      { title: "Payment Test", url: "/admin/payment-test", icon: <FlaskConical /> },
-    ],
-  },
-]
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [isLoggingOut, startLogout] = React.useTransition()
+  const { data: attention } = useSWR<{
+    pendingSponsorships: number
+    pendingDonations: number
+    unsponsoredChildren: number
+  }>("/api/admin/attention", fetcher, { revalidateOnFocus: false })
+
+  const sections: NavSection[] = [
+    {
+      label: "Overview",
+      items: [
+        { title: "Dashboard", url: "/admin", icon: <LayoutDashboardIcon /> },
+      ],
+    },
+    {
+      label: "Fundraising",
+      items: [
+        { title: "Sponsors", url: "/admin/sponsors", icon: <GoSponsorTiers />, badge: attention?.pendingSponsorships },
+        { title: "Donors", url: "/admin/donors", icon: <UsersRound /> },
+        { title: "Donations", url: "/admin/donations", icon: <HandCoins />, badge: attention?.pendingDonations },
+        { title: "Payments", url: "/admin/payments", icon: <CreditCard /> },
+      ],
+    },
+    {
+      label: "Content",
+      items: [
+        { title: "Children", url: "/admin/children", icon: <FaChild />, badge: attention?.unsponsoredChildren },
+        { title: "Newsletters", url: "/admin/newsletters", icon: <Mail /> },
+        { title: "Reports", url: "/admin/reports", icon: <ClipboardList /> },
+      ],
+    },
+    {
+      label: "System",
+      items: [
+        { title: "Payment Test", url: "/admin/payment-test", icon: <FlaskConical /> },
+      ],
+    },
+  ]
 
   const handleLogout = () => {
     startLogout(async () => {

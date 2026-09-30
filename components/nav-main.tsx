@@ -7,6 +7,7 @@ import {
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
+  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
@@ -15,6 +16,7 @@ export interface NavItem {
   title: string
   url: string
   icon?: React.ReactNode
+  badge?: number
 }
 
 export interface NavSection {
@@ -49,6 +51,9 @@ export function NavMain({ sections }: { sections: NavSection[] }) {
                       <span>{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
+                  {typeof item.badge === "number" && item.badge > 0 && (
+                    <SidebarMenuBadge>{item.badge > 99 ? "99+" : item.badge}</SidebarMenuBadge>
+                  )}
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>

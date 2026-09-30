@@ -20,7 +20,9 @@ import {
   XCircle,
   ChevronDown,
   ChevronUp,
+  Search,
 } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import {
   activateSponsorshipRequest,
   cancelSponsorshipRequest,
@@ -44,6 +46,8 @@ export default function SponsorsTable() {
   const { data: sponsorships, error, isLoading } = useSWR('/api/sponsorships', fetcher);
   const [processingId, setProcessingId] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState<'ALL' | 'PENDING' | 'ACTIVE' | 'CANCELLED'>('ALL');
 
   // The API returns { success: false, ... } on error — never call .filter on that.
   const list: {
@@ -59,6 +63,27 @@ export default function SponsorsTable() {
     donor: { name: string; email: string; phoneNumber: string | null; country: string | null; address: string | null };
     child: { name: string };
   }[] = Array.isArray(sponsorships) ? sponsorships : [];
+
+  const counts = {
+    ALL: list.length,
+    PENDING: list.filter((s) => s.status === 'PENDING').length,
+    ACTIVE: list.filter((s) => s.status === 'ACTIVE').length,
+    CANCELLED: list.filter((s) => s.status === 'CANCELLED').length,
+  };
+
+  const visible = list.filter((s) => {
+    if (statusFilter !== 'ALL' && s.status !== statusFilter) return false;
+    const q = search.trim().toLowerCase();
+    if (!q) return true;
+    return [
+      s.donor.name,
+      s.donor.email,
+      s.donor.phoneNumber ?? '',
+      s.child.name,
+      s.subscriptionReference ?? '',
+      s.status,
+    ].some((v) => v.toLowerCase().includes(q));
+  });
 
   const refresh = () => {
     mutate('/api/sponsorships');
@@ -108,12 +133,42 @@ export default function SponsorsTable() {
   return (
     <div className="space-y-6 mx-auto px-4 max-w-7xl sm:px-6 lg:px-8 py-6">
       {/* Top Header */}
-      <div>
-        <h2 className="text-2xl font-bold text-gray-900">Manage Sponsors &amp; Subscriptions</h2>
-        <p className="text-sm text-gray-500">
-          Review sponsorship requests, copy the subscription reference into the IremboPay dashboard
-          (customer + subscription), then activate here.
-        </p>
+      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">Manage Sponsors &amp; Subscriptions</h2>
+          <p className="text-sm text-gray-500">
+            Review sponsorship requests, copy the subscription reference into the IremboPay dashboard
+            (customer + subscription), then activate here.
+          </p>
+        </div>
+        <div className="relative w-full md:w-80">
+          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search donor, child, reference..."
+            aria-label="Search sponsorships"
+            className="pl-9 bg-white"
+          />
+        </div>
+      </div>
+
+      {/* Status filter pills */}
+      <div className="flex flex-wrap items-center gap-2">
+        {(['ALL', 'PENDING', 'ACTIVE', 'CANCELLED'] as const).map((status) => (
+          <button
+            key={status}
+            type="button"
+            onClick={() => setStatusFilter(status)}
+            className={`px-4 py-1.5 rounded-full text-xs font-semibold transition ${
+              statusFilter === status
+                ? 'bg-gray-900 text-white shadow-sm'
+                : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
+            }`}
+          >
+            {status === 'ALL' ? 'All' : status.charAt(0) + status.slice(1).toLowerCase()} ({counts[status]})
+          </button>
+        ))}
       </div>
 
       {/* Summary KPI Cards */}
@@ -183,14 +238,16 @@ export default function SponsorsTable() {
                   Failed to load sponsorships.
                 </TableCell>
               </TableRow>
-            ) : list.length === 0 ? (
+            ) : visible.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={7} className="text-center py-8 text-gray-500">
-                  No sponsorship requests yet.
+                  {list.length === 0
+                    ? 'No sponsorship requests yet.'
+                    : 'No requests match your search or filter.'}
                 </TableCell>
               </TableRow>
             ) : (
-              list.map((s) => {
+              visible.map((s) => {
                 const expanded = expandedId === s.id;
                 return (
                   <Fragment key={s.id}>

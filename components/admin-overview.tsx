@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ClipboardList, FileText, Heart, Users } from "lucide-react";
+import { ArrowRight, ClipboardList, FileText, Heart, Users, Clock, HandCoins } from "lucide-react";
 import { FaChild } from "react-icons/fa6";
 import { GoSponsorTiers } from "react-icons/go";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,9 +18,14 @@ type OverviewProps = {
   };
   recentChildren: RecentChild[];
   recentDonations: RecentDonation[];
+  attention: {
+    pendingSponsorships: number;
+    pendingDonations: number;
+    unsponsoredChildren: number;
+  };
 };
 
-export function AdminOverview({ stats, recentChildren, recentDonations }: OverviewProps) {
+export function AdminOverview({ stats, recentChildren, recentDonations, attention }: OverviewProps) {
   const cards = [
     ["Children", stats.children, "Registered in the system", FaChild, "/admin/children", "text-orange-600", "bg-orange-50"],
     ["Active sponsorships", stats.activeSponsorships, "Currently supporting a child", GoSponsorTiers, "/admin/sponsors", "text-emerald-700", "bg-emerald-50"],
@@ -34,6 +39,66 @@ export function AdminOverview({ stats, recentChildren, recentDonations }: Overvi
         <p className="text-sm font-semibold uppercase tracking-wider text-primary">Administrator dashboard</p>
         <h1 className="mt-1 text-3xl font-bold tracking-tight">Welcome to Reclaim Hope Admin</h1>
         <p className="mt-2 text-sm text-muted-foreground">A live view of the records your team manages.</p>
+      </div>
+
+      {/* Attention queue: what needs admin action right now */}
+      <div>
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+          Needs attention
+        </h2>
+        <div className="grid gap-4 sm:grid-cols-3">
+          {[
+            {
+              label: "Pending sponsorships",
+              value: attention.pendingSponsorships,
+              description: "Requests awaiting dashboard setup",
+              href: "/admin/sponsors",
+              Icon: GoSponsorTiers,
+            },
+            {
+              label: "Pending donations",
+              value: attention.pendingDonations,
+              description: "Donations awaiting IremboPay",
+              href: "/admin/donations",
+              Icon: HandCoins,
+            },
+            {
+              label: "Unsponsored children",
+              value: attention.unsponsoredChildren,
+              description: "Children with no active sponsor",
+              href: "/admin/children",
+              Icon: FaChild,
+            },
+          ].map(({ label, value, description, href, Icon }) => (
+            <Link key={label} href={href} className="group">
+              <Card
+                className={`h-full transition-colors group-hover:border-primary/50 ${
+                  value > 0 ? "border-amber-300/70 bg-amber-50/40" : ""
+                }`}
+              >
+                <CardHeader className="flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">
+                    {label}
+                  </CardTitle>
+                  <span
+                    className={`flex size-9 items-center justify-center rounded-full ${
+                      value > 0 ? "bg-amber-100 text-amber-700" : "bg-emerald-50 text-emerald-600"
+                    }`}
+                  >
+                    {value > 0 ? <Clock className="size-5" /> : <Icon className="size-5" />}
+                  </span>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-3xl font-bold tabular-nums">{value.toLocaleString()}</p>
+                  <p className="mt-1 inline-flex items-center gap-1 text-xs text-muted-foreground">
+                    {value > 0 ? description : "All clear"}
+                    <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+                  </p>
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
+        </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
