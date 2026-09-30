@@ -21,6 +21,7 @@ export async function GET(req: NextRequest) {
     host = "MALFORMED_URL";
   }
   const diagnostics = {
+    rev: "adapter-1109697",
     databaseUrlPresent: String(!!rawUrl),
     databaseHost: host,
     nodeEnv: process.env.NODE_ENV || "unknown",
