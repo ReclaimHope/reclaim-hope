@@ -2,65 +2,32 @@
 
 import { prisma } from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
-import { DonorInput } from "./sponsorship"
-import IremboPay from "@irembo/irembopay-node-sdk";
-const iPay = new IremboPay(process.env.IPAY_SECRET_KEY, process.env.IPAY_ENVIRONMENT)
+import {
+  createIremboInvoice,
+  getIremboConfig,
+  fetchIremboInvoiceDetails,
+  parseIremboDate,
+} from "@/lib/payments/iremboPay"
 
 export type DonationCategoryType = 'MEALS' | 'HEALTH' | 'EDUCATION' | 'LOVE_GIFT'
-export type DonationPaymentMethod = 'MTN_MOMO' | 'AIRTEL_MONEY' | 'CARD' | 'BANK'
-export type DonationBank = 'GT_BANK' | 'EQUITY_BANK' | 'BPR_BANK' | 'ECOBANK' | 'BANK_OF_KIGALI' | 'IM_BANK'
+
+export interface DonorInfoInput {
+  firstName: string
+  lastName: string
+  email: string
+  phoneNumber?: string | null
+  address?: string | null
+  country?: string | null
+  message?: string | null
+}
 
 export interface CreateDonationInput {
   category: DonationCategoryType
   amount: number
   currency: 'USD' | 'RWF'
-  paymentMethod: DonationPaymentMethod
-  bank?: DonationBank
-  donor?: DonorInput & { message?: string }
+  donor?: DonorInfoInput
 }
 
-type InvoiceDonor = Pick<DonorInput, 'firstName' | 'lastName' | 'email'> & {
-  phoneNumber: string | null
-}
-
-async function createIpayInvoice({ donor }: { donor: InvoiceDonor | null }, amount: number, currency: 'USD' | 'RWF', category: string, paymentId: string, bank?: DonationBank): Promise<{ invoiceNumber: string; paymentLinkUrl?: string }> {
-  const paymentAccountIdentifier = currency === 'RWF'
-    ? process.env.IPAY_RWF_ACCOUNT_IDENTIFIER
-    : process.env.IPAY_USD_ACCOUNT_IDENTIFIER
-
-  if (!paymentAccountIdentifier) {
-    throw new Error(`IremboPay ${currency} account identifier is not configured.`)
-  }
-
-  const invoice = await iPay.invoice.createInvoice({
-    transactionId: paymentId,
-    paymentAccountIdentifier,
-    customer: {
-      email: donor?.email,
-      phoneNumber: donor?.phoneNumber,
-      name: donor?.firstName + " " + donor?.lastName,
-    },
-    paymentItems: [
-      {
-        unitAmount: amount,
-        quantity: 1,
-        code: "PC-aaf751b73f",
-      },
-    ],
-    description: `Donation for ${category}${bank ? ` via ${bank}` : ''}`,
-    language: "EN",
-  }) as { invoiceNumber?: string; paymentLinkUrl?: string }
-
-  if (!invoice?.invoiceNumber) {
-    throw new Error("IremboPay did not return an invoice number.")
-  }
-
-  return {
-    invoiceNumber: invoice.invoiceNumber,
-    paymentLinkUrl: invoice.paymentLinkUrl,
-  }
-
-}
 function generateReference(prefix: string): string {
   const timestamp = Date.now().toString(36).toUpperCase()
   const random = Math.random().toString(36).substring(2, 6).toUpperCase()
@@ -68,113 +35,223 @@ function generateReference(prefix: string): string {
 }
 
 /**
- * Step 1-6: Create Pending Donation & Pending Payment
+ * Step 1-6: Create Pending Donation, Pending Payment, and IremboPay Invoice
+ * Returns invoice and public key for the frontend IremboPay widget
  */
 export async function createPendingDonation(input: CreateDonationInput) {
   try {
-    const { category, amount, currency, paymentMethod, bank, donor: donorInput } = input
+    const { category, amount, currency, donor: donorInput } = input
 
-    const expectedCurrency = paymentMethod === 'CARD' ? 'USD' : 'RWF'
-    if (paymentMethod === 'BANK' && !bank) {
-      return { success: false, error: "Please choose a bank for your payment." }
-    }
-    if (currency !== expectedCurrency) {
-      return { success: false, error: `${paymentMethod === 'CARD' ? 'Card payments' : 'Mobile money payments'} must use ${expectedCurrency}.` }
+    // 1. Validate Category
+    const allowedCategories: DonationCategoryType[] = ['MEALS', 'HEALTH', 'EDUCATION', 'LOVE_GIFT']
+    if (!category || !allowedCategories.includes(category)) {
+      return {
+        success: false,
+        error: "Please choose a valid donation purpose (Meals, Health, Education, or Love Gift).",
+      }
     }
 
-    if (!amount || isNaN(amount) || amount <= 0) {
+    // 2. Validate Amount
+    const parsedAmount = Number(amount)
+    if (!parsedAmount || isNaN(parsedAmount) || parsedAmount <= 0) {
       return { success: false, error: "Please enter a valid donation amount." }
     }
 
-    if (!category) {
-      return { success: false, error: "Please choose a donation purpose." }
+    // 3. Validate Currency
+    if (currency !== 'RWF' && currency !== 'USD') {
+      return { success: false, error: "Currency must be either RWF or USD." }
     }
 
+    // 4. Handle Donor Record (Safe upsert using findFirst to respect DB schema)
     let donor = null
     if (donorInput?.email && donorInput?.firstName && donorInput?.lastName) {
       const cleanEmail = donorInput.email.trim().toLowerCase()
-      donor = await prisma.donor.upsert({
+      const existingDonor = await prisma.donor.findFirst({
         where: { email: cleanEmail },
-        update: {
-          firstName: donorInput.firstName.trim(),
-          lastName: donorInput.lastName.trim(),
-          phoneNumber: donorInput.phoneNumber?.trim() || null,
-          country: donorInput.country?.trim() || null,
-          address: donorInput.address?.trim() || null,
-        },
-        create: {
-          firstName: donorInput.firstName.trim(),
-          lastName: donorInput.lastName.trim(),
-          email: cleanEmail,
-          phoneNumber: donorInput.phoneNumber?.trim() || null,
-          country: donorInput.country?.trim() || null,
-          address: donorInput.address?.trim() || null,
-        },
       })
+
+      if (existingDonor) {
+        donor = await prisma.donor.update({
+          where: { id: existingDonor.id },
+          data: {
+            firstName: donorInput.firstName.trim(),
+            lastName: donorInput.lastName.trim(),
+            phoneNumber: donorInput.phoneNumber?.trim() || null,
+            address: donorInput.address?.trim() || null,
+            country: donorInput.country?.trim() || null,
+          },
+        })
+      } else {
+        donor = await prisma.donor.create({
+          data: {
+            firstName: donorInput.firstName.trim(),
+            lastName: donorInput.lastName.trim(),
+            email: cleanEmail,
+            phoneNumber: donorInput.phoneNumber?.trim() || null,
+            address: donorInput.address?.trim() || null,
+            country: donorInput.country?.trim() || null,
+          },
+        })
+      }
     }
 
+    // 5. Generate internal payment reference
     const reference = generateReference("DON")
 
-    const result = await prisma.$transaction(async (tx) => {
-      const donation = await tx.donation.create({
+    // 6. Create Donation (PENDING) and Payment (PENDING) in a transaction
+    const { donation, payment } = await prisma.$transaction(async (tx) => {
+      const newDonation = await tx.donation.create({
         data: {
           donorId: donor ? donor.id : null,
-          amount,
+          amount: parsedAmount,
           currency,
           category,
           status: "PENDING",
         },
       })
 
-      const payment = await tx.payment.create({
+      const newPayment = await tx.payment.create({
         data: {
-          donationId: donation.id,
+          donationId: newDonation.id,
           reference,
-          amount,
+          amount: parsedAmount,
           currency,
           provider: "IPAY",
           status: "PENDING",
         },
       })
 
-      return { donation, payment }
+      return { donation: newDonation, payment: newPayment }
     })
 
-    const invoice = await createIpayInvoice({ donor }, amount, currency, category, result.payment.id, bank)
+    // 7. Create IremboPay Invoice via dedicated service
+    const donorName = donor ? `${donor.firstName} ${donor.lastName}`.trim() : "Anonymous Donor"
+    const invoice = await createIremboInvoice({
+      transactionId: payment.reference,
+      amount: parsedAmount,
+      currency,
+      description: `Donation: ${category.replace("_", " ")} - Reclaim Hope`,
+      customer: {
+        name: donorName,
+        email: donor?.email || undefined,
+        phoneNumber: donor?.phoneNumber || undefined,
+      },
+    })
+
+    // 8. Save IremboPay invoice number to payment for tracking
+    await prisma.payment.update({
+      where: { id: payment.id },
+      data: {
+        transactionId: invoice.invoiceNumber,
+      },
+    })
+
+    const config = getIremboConfig()
+
     revalidatePath("/donate")
-    revalidatePath("/admin/sponsors")
     revalidatePath("/admin/donations")
     revalidatePath("/admin/payments")
 
     return {
       success: true,
+      publicKey: config.publicKey,
+      environment: config.environment,
       donation: {
-        id: result.donation.id,
-        category: result.donation.category,
-        amount: Number(result.donation.amount),
-        currency: result.donation.currency,
-        status: result.donation.status,
+        id: donation.id,
+        category: donation.category,
+        amount: Number(donation.amount),
+        currency: donation.currency,
+        status: donation.status,
       },
       payment: {
-        id: result.payment.id,
-        reference: result.payment.reference,
-        amount: Number(result.payment.amount),
-        currency: result.payment.currency,
-        status: result.payment.status,
+        id: payment.id,
+        reference: payment.reference,
+        amount: Number(payment.amount),
+        currency: payment.currency,
+        status: payment.status,
         invoiceNumber: invoice.invoiceNumber,
         paymentLinkUrl: invoice.paymentLinkUrl || null,
       },
-      donor: donor
-        ? {
-          id: donor.id,
-          name: `${donor.firstName} ${donor.lastName}`.trim(),
-          email: donor.email,
-        }
-        : null,
     }
   } catch (error: unknown) {
     console.error("Error creating pending donation:", error)
-    return { success: false, error: error instanceof Error ? error.message : "Failed to initiate donation." }
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to initiate donation with IremboPay.",
+    }
+  }
+}
+
+/**
+ * Checks authoritative payment status from database and cross-checks IremboPay API if needed.
+ */
+export async function getPaymentStatusAction(referenceOrInvoice: string) {
+  try {
+    const payment = await prisma.payment.findFirst({
+      where: {
+        OR: [
+          { reference: referenceOrInvoice },
+          { id: referenceOrInvoice },
+          { transactionId: referenceOrInvoice },
+        ],
+      },
+      include: {
+        donation: true,
+      },
+    })
+
+    if (!payment) {
+      return { success: false, error: "Payment not found" }
+    }
+
+    // If still PENDING in DB, check IremboPay API directly in case webhook was delayed
+    if (payment.status === "PENDING" && payment.transactionId) {
+      try {
+        const details = await fetchIremboInvoiceDetails(payment.transactionId)
+        if (details.paymentStatus.toUpperCase() === "PAID") {
+          // Authoritative paid: transition in DB
+          await prisma.$transaction(async (tx) => {
+            await tx.payment.update({
+              where: { id: payment.id },
+              data: {
+                status: "SUCCESSFUL",
+                paidAt: parseIremboDate(details.paidAt),
+              },
+            })
+
+            if (payment.donationId) {
+              await tx.donation.update({
+                where: { id: payment.donationId },
+                data: { status: "COMPLETED" },
+              })
+            }
+          })
+
+          revalidatePath("/donate")
+          revalidatePath("/admin/donations")
+          revalidatePath("/admin/payments")
+
+          return {
+            success: true,
+            status: "SUCCESSFUL",
+            donationStatus: "COMPLETED",
+            paidAt: details.paidAt || new Date().toISOString(),
+          }
+        }
+      } catch (err) {
+        console.warn("Status check against IremboPay API failed:", err)
+      }
+    }
+
+    return {
+      success: true,
+      status: payment.status,
+      donationStatus: payment.donation?.status || null,
+      paidAt: payment.paidAt?.toISOString() || null,
+    }
+  } catch (error) {
+    console.error("Error checking payment status:", error)
+    return { success: false, error: "Failed to check payment status" }
   }
 }
 
@@ -202,18 +279,18 @@ export async function getDonationsList() {
       createdAt: d.createdAt.toISOString(),
       donor: d.donor
         ? {
-          name: `${d.donor.firstName} ${d.donor.lastName}`.trim(),
-          email: d.donor.email,
-          country: d.donor.country,
-        }
+            name: `${d.donor.firstName} ${d.donor.lastName}`.trim(),
+            email: d.donor.email,
+            country: d.donor.country,
+          }
         : null,
       latestPayment: d.payments[0]
         ? {
-          id: d.payments[0].id,
-          reference: d.payments[0].reference,
-          status: d.payments[0].status,
-          paidAt: d.payments[0].paidAt?.toISOString() || null,
-        }
+            id: d.payments[0].id,
+            reference: d.payments[0].reference,
+            status: d.payments[0].status,
+            paidAt: d.payments[0].paidAt?.toISOString() || null,
+          }
         : null,
     }))
   } catch (error) {

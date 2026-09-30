@@ -85,6 +85,16 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // The inline widget CDN must match the environment the invoice was created
+  // in (sandbox vs production). Prefer the NEXT_PUBLIC var so the client
+  // bundle resolves the same value at build time.
+  const ipayEnv =
+    process.env.NEXT_PUBLIC_IPAY_ENVIRONMENT || process.env.IPAY_ENVIRONMENT;
+  const ipayWidgetSrc = `${
+    ipayEnv === "production"
+      ? "https://dashboard.irembopay.com"
+      : "https://dashboard.sandbox.irembopay.com"
+  }/assets/payment/inline.js`;
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "NonprofitOrganization",
@@ -147,7 +157,7 @@ export default function RootLayout({
         </ConditionalNavFooter>
         <Toaster richColors position="top-right" />
         <Script
-          src={`${process.env.IPAY_ENVIRONMENT === "production" ? "https://dashboard.irembopay.com" : "https://dashboard.sandbox.irembopay.com"}/assets/payment/inline.js`}
+          src={ipayWidgetSrc}
           strategy="afterInteractive"
         />
       </body>

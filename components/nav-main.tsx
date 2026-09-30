@@ -1,44 +1,60 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import {
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { CirclePlusIcon, MailIcon } from "lucide-react"
 
-export function NavMain({
-  items,
-}: {
-  items: {
-    title: string
-    url: string
-    icon?: React.ReactNode
-  }[]
-}) {
+export interface NavItem {
+  title: string
+  url: string
+  icon?: React.ReactNode
+}
+
+export interface NavSection {
+  label: string
+  items: NavItem[]
+}
+
+function isActive(pathname: string, url: string) {
+  if (url === "/admin") return pathname === "/admin"
+  return pathname === url || pathname.startsWith(`${url}/`)
+}
+
+export function NavMain({ sections }: { sections: NavSection[] }) {
+  const pathname = usePathname()
+
   return (
-    <SidebarGroup>
-      <SidebarGroupContent className="flex flex-col gap-2">
-
-        <SidebarMenu>
-          {items.map((item) => (
-            <SidebarMenuItem key={item.title} className="mt-4" >
-              <Link
-                href={item.url}
-              >
-                <SidebarMenuButton tooltip={item.title}>
-                  {item.icon}
-                  <span>{item.title}</span>
-                </SidebarMenuButton>
-              </Link>
-            </SidebarMenuItem>
-          ))}
-        </SidebarMenu>
-      </SidebarGroupContent>
-    </SidebarGroup>
+    <>
+      {sections.map((section) => (
+        <SidebarGroup key={section.label}>
+          <SidebarGroupLabel>{section.label}</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {section.items.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={isActive(pathname, item.url)}
+                    tooltip={item.title}
+                  >
+                    <Link href={item.url}>
+                      {item.icon}
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      ))}
+    </>
   )
 }

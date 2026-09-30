@@ -7,9 +7,6 @@ export async function GET() {
       include: {
         donor: true,
         child: true,
-        payments: {
-          orderBy: { createdAt: "desc" },
-        },
       },
       orderBy: { createdAt: "desc" },
     });
@@ -20,6 +17,9 @@ export async function GET() {
       currency: s.currency,
       frequency: s.frequency,
       status: s.status,
+      subscriptionReference: s.subscriptionReference,
+      requestedStartDate: s.requestedStartDate?.toISOString() || null,
+      chargesCount: s.chargesCount,
       startedAt: s.startedAt?.toISOString() || null,
       endedAt: s.endedAt?.toISOString() || null,
       createdAt: s.createdAt.toISOString(),
@@ -37,15 +37,6 @@ export async function GET() {
         dream: s.child.dream,
         imageUrl: s.child.imageUrl,
       },
-      latestPayment: s.payments[0]
-        ? {
-            id: s.payments[0].id,
-            reference: s.payments[0].reference,
-            status: s.payments[0].status,
-            paidAt: s.payments[0].paidAt?.toISOString() || null,
-          }
-        : null,
-      paymentsCount: s.payments.length,
     }));
 
     return NextResponse.json(formatted, { status: 200 });

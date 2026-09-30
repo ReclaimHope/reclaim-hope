@@ -93,6 +93,15 @@ model Sponsorship {
   frequency  SponsorshipFrequency
   status     SponsorshipStatus    @default(PENDING)
 
+  // Manual IremboPay subscription workflow (no subscription API):
+  // sponsor submits a request on the site; admin creates the customer +
+  // subscription in the IremboPay dashboard using this reference, then
+  // activates the request here.
+  subscriptionReference String?   @unique
+  requestedStartDate    DateTime?
+  // Null = indefinite (active until cancelled), matching dashboard behavior.
+  chargesCount          Int?
+
   startedAt  DateTime?
   endedAt    DateTime?
 

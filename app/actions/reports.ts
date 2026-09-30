@@ -54,7 +54,7 @@ export async function createReportAction(formData: FormData) {
     if (!(file instanceof File)) return { success: false, error: "A report file is required." }
 
     const uploaded = await uploadReport(file)
-    if (uploaded.error) return { success: false, error: uploaded.error }
+    if (uploaded.error || !uploaded.url) return { success: false, error: uploaded.error || "Upload failed" }
 
     await prisma.report.create({ data: { title, fileUrl: uploaded.url } })
     revalidatePath("/admin/reports")
@@ -78,7 +78,7 @@ export async function updateReportAction(id: string, formData: FormData) {
     let fileUrl = report.fileUrl
     if (file instanceof File && file.size > 0) {
       const uploaded = await uploadReport(file)
-      if (uploaded.error) return { success: false, error: uploaded.error }
+      if (uploaded.error || !uploaded.url) return { success: false, error: uploaded.error || "Upload failed" }
       fileUrl = uploaded.url
       await deleteReportFile(report.fileUrl)
     }

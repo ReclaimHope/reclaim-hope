@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import ChildCard from "./ChildCard";
-import { INITIAL_CHILDREN } from "@/lib/initial-children";
 import { Heart, Sparkles, UserCheck } from "lucide-react";
 
 export interface ChildItem {
@@ -28,25 +27,8 @@ type ChildGridProps = {
   activeChildId?: string;
 };
 
-// Fallback list converted from INITIAL_CHILDREN
-export const children: ChildItem[] = INITIAL_CHILDREN.map((c) => {
-  const currentYear = new Date().getFullYear();
-  const birthYear = new Date(c.dateOfBirth).getFullYear();
-  const age = Math.max(0, currentYear - birthYear);
-  return {
-    id: c.id,
-    name: `${c.firstName} ${c.lastName}`.trim(),
-    age,
-    dream: c.dream,
-    image: c.imageUrl,
-    summary: c.summary,
-    story: [c.story],
-    isSponsored: false,
-  };
-});
-
 export default function ChildGrid({
-  childrenList = children,
+  childrenList = [],
   onChildSelect,
   activeChildId,
 }: ChildGridProps) {
@@ -113,7 +95,15 @@ export default function ChildGrid({
         </div>
 
         {/* Children Grid */}
-        {filteredChildren.length === 0 ? (
+        {childrenList.length === 0 ? (
+          <div className="text-center py-16 bg-white rounded-3xl border border-gray-200 max-w-md mx-auto p-8">
+            <Heart className="w-12 h-12 text-yellow-500 mx-auto mb-3" />
+            <h3 className="text-xl font-bold text-gray-900 mb-2">No children available yet</h3>
+            <p className="text-sm text-gray-600">
+              There are currently no children listed for sponsorship. Please check back soon.
+            </p>
+          </div>
+        ) : filteredChildren.length === 0 ? (
           <div className="text-center py-16 bg-white rounded-3xl border border-gray-200 max-w-md mx-auto p-8">
             <Heart className="w-12 h-12 text-yellow-500 mx-auto mb-3" />
             <h3 className="text-xl font-bold text-gray-900 mb-2">No children found</h3>

@@ -1,7 +1,9 @@
-import { Donor } from "@/lib/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
-type currency = "USD" | "RWF";
+import {
+  createPendingDonation,
+  DonationCategoryType,
+} from "@/app/actions/donation";
 
 export async function GET() {
   try {
@@ -47,110 +49,102 @@ export async function GET() {
     console.error("Error fetching donations:", error);
     return NextResponse.json(
       { success: false, error: "Failed to fetch donations." },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
-const IremboPay = require("@irembo/irembopay-node-sdk").default;
-const iPay = new IremboPay(
-  process.env.IPAY_SECRET_KEY,
-  process.env.IPAY_ENVIRONMENT,
-);
+
 export async function POST(request: Request) {
   try {
-    const data = await request.formData();
-    const firstName = data.get("firstName") as string;
-    const lastName = data.get("lastName") as string;
-    const email = data.get("email") as string;  
-    const phoneNumber = data.get("phoneNumber") as string;
-    const amount = Number(data.get("amount"));
-    const currency = data.get("currency") as currency;
-    const address = data.get("homeAddress") as string;
+    let category: DonationCategoryType = "MEALS";
+    let amount = 0;
+    let currency: "USD" | "RWF" = "RWF";
+    let firstName = "";
+    let lastName = "";
+    let email = "";
+    let phoneNumber = "";
+    let homeAddress = "";
+    let message = "";
+    let acceptedPolicy = false;
 
-    console.log("Received donation data:", {
-      firstName,
-      lastName,
-      email,
-      phoneNumber,
+    const contentType = request.headers.get("content-type") || "";
+
+    if (contentType.includes("application/json")) {
+      const body = await request.json();
+      category = (body.category || "MEALS") as DonationCategoryType;
+      amount = Number(body.amount);
+      currency = (body.currency || "RWF") as "USD" | "RWF";
+      firstName = body.firstName || body.donor?.firstName || "";
+      lastName = body.lastName || body.donor?.lastName || "";
+      email = body.email || body.donor?.email || "";
+      phoneNumber = body.phoneNumber || body.donor?.phoneNumber || "";
+      homeAddress = body.homeAddress || body.address || body.donor?.address || "";
+      message = body.message || body.donor?.message || "";
+      acceptedPolicy = body.acceptedPolicy === true;
+    } else {
+      const data = await request.formData();
+      category = (data.get("category") as DonationCategoryType) || "MEALS";
+      amount = Number(data.get("amount"));
+      currency = (data.get("currency") as "USD" | "RWF") || "RWF";
+      firstName = (data.get("firstName") as string) || "";
+      lastName = (data.get("lastName") as string) || "";
+      email = (data.get("email") as string) || "";
+      phoneNumber = (data.get("phoneNumber") as string) || "";
+      homeAddress = (data.get("homeAddress") as string) || "";
+      message = (data.get("message") as string) || "";
+      acceptedPolicy = data.get("acceptedPolicy") === "true";
+    }
+
+    if (!acceptedPolicy) {
+      return NextResponse.json(
+        { success: false, error: "You must accept the Refund & Cancellation Policy before continuing." },
+        { status: 400 }
+      );
+    }
+
+    const result = await createPendingDonation({
+      category,
       amount,
       currency,
-      address,
-    });
-    const donor = await prisma.donor.create({
-      data: {
+      donor: {
         firstName,
         lastName,
         email,
         phoneNumber,
-        address,
+        address: homeAddress,
+        message,
       },
     });
 
-    const donation = await prisma.donation.create({
-      data: {
-        amount,
-        currency,
-        donorId: donor.id,
-      },
-    });
-
-   const invoiceData = await createIpayInvoice({ donor }, amount, currency, donation.id);
-
-   console.log("Invoice Data:", invoiceData);
+    if (!result.success || !result.payment) {
+      return NextResponse.json(
+        { success: false, error: result.error || "Failed to create donation" },
+        { status: 400 }
+      );
+    }
 
     return NextResponse.json(
       {
         success: true,
-        invoiceNumber: invoiceData.invoiceNumber,
-        paymentLinkUrl: invoiceData.paymentLinkUrl,
+        invoiceNumber: result.payment.invoiceNumber,
+        paymentLinkUrl: result.payment.paymentLinkUrl,
+        publicKey: result.publicKey,
+        environment: result.environment,
+        paymentId: result.payment.id,
+        reference: result.payment.reference,
+        donation: result.donation,
+        payment: result.payment,
       },
-      { status: 201 },
+      { status: 201 }
     );
-
-  } catch (error) {
-    console.error("Error creating donation:", error);
+  } catch (error: any) {
+    console.error("Error creating donation via API:", error);
     return NextResponse.json(
-      { success: false, error: "Failed to create donation." },
-      { status: 500 },
-    );
-  }
-}
-async function createIpayInvoice(
-  { donor }: { donor: Donor },
-  amount: number,
-  currency: "USD" | "RWF",
-  paymentId: string,
-) {
-  const paymentAccountIdentifier =
-    currency === "RWF"
-      ? process.env.IPAY_RWF_ACCOUNT_IDENTIFIER
-      : process.env.IPAY_USD_ACCOUNT_IDENTIFIER;
-
-  if (!paymentAccountIdentifier) {
-    throw new Error(
-      `IremboPay ${currency} account identifier is not configured.`,
-    );
-  }
-
-  const invoice = (await iPay.invoice.createInvoice({
-    transactionId: paymentId,
-    paymentAccountIdentifier,
-    customer: {
-      email: donor?.email,
-      phoneNumber: donor?.phoneNumber,
-      name: donor?.firstName + " " + donor?.lastName,
-    },
-    paymentItems: [
       {
-        unitAmount: amount,
-        quantity: 1,
-        code: currency === "RWF" ? process.env.IPAY_PRODUCT_IDENTIFIER_RWF : process.env.IPAY_PRODUCT_IDENTIFIER_USD,
+        success: false,
+        error: error instanceof Error ? error.message : "Failed to create donation.",
       },
-    ],
-    description: `testing donations sandbox`,
-    language: "EN",
-  })) as { data: { invoiceNumber?: string; paymentLinkUrl?: string } };
-
-  console.log("IremboPay Invoice Response:", invoice.data);
-  return invoice.data;
+      { status: 500 }
+    );
+  }
 }
