@@ -60,7 +60,6 @@ const nextConfig = {
     '/admin/reports': prismaTraceFiles,
     '/admin/sponsors': prismaTraceFiles,
     '/api/admin/attention': prismaTraceFiles,
-    '/api/admin/db-check': prismaTraceFiles,
     '/api/admin/newsletters': prismaTraceFiles,
     '/api/admin/reports': prismaTraceFiles,
     '/api/children': prismaTraceFiles,
