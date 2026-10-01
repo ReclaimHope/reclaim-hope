@@ -204,11 +204,18 @@ export async function getPaymentStatusAction(referenceOrInvoice: string) {
       return { success: false, error: "Payment not found" }
     }
 
-    // If still PENDING in DB, check IremboPay API directly in case webhook was delayed
+    // If still PENDING in DB, check IremboPay API directly in case webhook was delayed.
+    // THROTTLED: each check costs a ~2s external API call, and the frontend
+    // polls every 2.5s. Only re-query IremboPay if the row hasn't been
+    // checked in the last 20s (tracked via updatedAt, touched after every
+    // check). The webhook remains the primary confirmation path.
     if (payment.status === "PENDING" && payment.transactionId) {
-      try {
-        const details = await fetchIremboInvoiceDetails(payment.transactionId)
-        if (details.paymentStatus.toUpperCase() === "PAID") {
+      const RECHECK_INTERVAL_MS = 20_000;
+      const lastChecked = payment.updatedAt ? payment.updatedAt.getTime() : 0;
+      if (Date.now() - lastChecked >= RECHECK_INTERVAL_MS) {
+        try {
+          const details = await fetchIremboInvoiceDetails(payment.transactionId)
+          if (details.paymentStatus.toUpperCase() === "PAID") {
           // Authoritative paid: transition in DB
           await prisma.$transaction(async (tx) => {
             await tx.payment.update({
@@ -238,8 +245,16 @@ export async function getPaymentStatusAction(referenceOrInvoice: string) {
             paidAt: details.paidAt || new Date().toISOString(),
           }
         }
-      } catch (err) {
-        console.warn("Status check against IremboPay API failed:", err)
+
+          // Still pending upstream: record the check time so the next poll
+          // waits out the throttle window instead of hammering IremboPay.
+          await prisma.payment.update({
+            where: { id: payment.id },
+            data: { updatedAt: new Date() },
+          });
+        } catch (err) {
+          console.warn("Status check against IremboPay API failed:", err)
+        }
       }
     }
 
