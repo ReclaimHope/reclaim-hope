@@ -42,3 +42,6 @@ yarn-error.log*
 next-env.d.ts
 
 /lib/generated/prisma
+# Parent-dir copy of the native engine (scripts/copy-prisma-engine.mjs
+# regenerates it from postinstall on every machine — never commit binaries)
+/lib/generated/*.node
