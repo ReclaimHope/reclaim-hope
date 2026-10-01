@@ -32,11 +32,10 @@ export async function updateChildAction(id: string, formData: FormData) {
         const lastName = String(formData.get("lastName") ?? "").trim()
         const dateOfBirth = String(formData.get("dateOfBirth") ?? "").trim()
         const dream = String(formData.get("dream") ?? "").trim()
-        const summary = String(formData.get("summary") ?? "").trim()
         const story = String(formData.get("story") ?? "").trim()
         const image = formData.get("image")
 
-        if (!firstName || !lastName || !dateOfBirth || !dream || !summary || !story) {
+        if (!firstName || !lastName || !dateOfBirth || !dream || !story) {
             return { success: false, error: "Please fill in all required fields." }
         }
 
@@ -75,7 +74,6 @@ export async function updateChildAction(id: string, formData: FormData) {
             dateOfBirth: new Date(dateOfBirth),
             dream,
             imageUrl,
-            summary,
             story,
         }
 

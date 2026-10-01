@@ -10,7 +10,7 @@ interface TestimonialChild {
   age: number;
   dream: string;
   image: string;
-  summary: string;
+  story: string;
   isSponsored: boolean;
 }
 
@@ -61,7 +61,7 @@ export default async function TestimonialSection() {
           age: calculateAge(child.dateOfBirth),
           dream: child.dream,
           image: child.imageUrl ? getR2ObjectUrl(child.imageUrl) : "/mentors_kids.jpg",
-          summary: child.summary,
+          story: child.story,
           isSponsored,
         };
       })
@@ -74,7 +74,7 @@ export default async function TestimonialSection() {
     age: calculateAge(c.dateOfBirth),
     dream: c.dream,
     image: c.imageUrl || "/mentors_kids.jpg",
-    summary: c.summary,
+    story: c.story,
     isSponsored: false,
   }));
 
@@ -131,7 +131,7 @@ export default async function TestimonialSection() {
                     Dreams of becoming {child.dream}
                   </p>
                   <p className="text-gray-600 text-sm leading-relaxed mb-6 line-clamp-3">
-                    {child.summary}
+                    {child.story.length > 150 ? `${child.story.slice(0, 150)}...` : child.story}
                   </p>
                 </div>
                 <Link

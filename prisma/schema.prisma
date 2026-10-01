@@ -54,7 +54,6 @@ model Child {
   dateOfBirth  DateTime
   dream        String
   imageUrl     String?
-  summary      String
   story        String        @db.Text
 
   sponsorships Sponsorship[]

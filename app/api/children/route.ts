@@ -27,7 +27,6 @@ export async function POST(req: NextRequest) {
       dateOfBirth,
       dream,
       imageUrl,
-      summary,
       story,
     } = body;
 
@@ -40,7 +39,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (!firstName || !lastName || !dateOfBirth || !dream || !summary || !story) {
+    if (!firstName || !lastName || !dateOfBirth || !dream || !story) {
       return NextResponse.json(
         { success: false, error: "Please fill in all required fields." },
         { status: 400 }
@@ -72,7 +71,6 @@ export async function POST(req: NextRequest) {
         dateOfBirth: new Date(dateOfBirth),
         dream,
         imageUrl: uploadedImageUrl || null,
-        summary,
         story,
       },
     });
@@ -113,7 +111,6 @@ export async function GET() {
         dateOfBirth: c.dateOfBirth,
         dream: c.dream,
         imageUrl: c.imageUrl ? getR2ObjectUrl(c.imageUrl) : null,
-        summary: c.summary,
         story: c.story,
         isSponsored: !!activeSponsorship,
         sponsorshipStatus: activeSponsorship ? "Sponsored" : "NotSponsored",

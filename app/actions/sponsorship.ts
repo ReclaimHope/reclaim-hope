@@ -60,7 +60,6 @@ export async function getChildrenWithStatus() {
         age: calculateAge(c.dateOfBirth),
         dream: c.dream,
         imageUrl: c.imageUrl || "/mentors_kids.jpg",
-        summary: c.summary,
         story: c.story,
         isSponsored: !!activeSponsorship,
         sponsorName: activeSponsorship

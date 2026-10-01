@@ -38,10 +38,9 @@ export function CreateChildDialog() {
             const dateOfBirth = String(formData.get("dateOfBirth") ?? "").trim();
             const dream = String(formData.get("dream") ?? "").trim();
             const imageUrl = String(formData.get("imageUrl") ?? "").trim();
-            const summary = String(formData.get("summary") ?? "").trim();
             const story = String(formData.get("story") ?? "").trim();
 
-            if (!firstName || !lastName || !dateOfBirth || !dream || !summary) {
+            if (!firstName || !lastName || !dateOfBirth || !dream) {
                 toast.error("Please fill in all required fields.");
                 return;
             }
@@ -139,17 +138,6 @@ export function CreateChildDialog() {
                         <Field className="md:col-span-2">
                             <Label>Child Image</Label>
                             <ImageDropzone value={images} onChange={setImages} maxFiles={1} />
-                        </Field>
-
-                        <Field className="md:col-span-2">
-                            <Label htmlFor="summary">Child & Family Information</Label>
-                            <Textarea
-                                id="summary"
-                                name="summary"
-                                rows={2}
-                                placeholder="Short summary about the child..."
-                                required
-                            />
                         </Field>
 
                         <Field className="md:col-span-2">

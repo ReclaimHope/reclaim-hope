@@ -11,7 +11,6 @@ export type ChildProfile = {
   age: number;
   dream: string;
   image: string;
-  summary: string;
   story: string[];
   goals?: string[];
   needs?: string[];
@@ -86,10 +85,6 @@ export default function FeaturedChild({ child }: FeaturedChildProps) {
                 </p>
               </div>
 
-              <p className="text-lg text-gray-700 leading-relaxed mb-6 font-medium">
-                {child.summary}
-              </p>
-
               {child.story.map((paragraph, index) => (
                 <p
                   key={index}
@@ -159,7 +154,6 @@ export default function FeaturedChild({ child }: FeaturedChildProps) {
           age: child.age,
           dream: child.dream,
           image: child.image,
-          summary: child.summary,
           isSponsored: child.isSponsored,
         }}
       />

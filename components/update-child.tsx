@@ -30,7 +30,6 @@ type childProps = {
     dateOfBirth: string;
     dream: string;
     imageUrl: string;
-    summary: string;
     story: string;
 }
 
@@ -66,10 +65,9 @@ export function UpdateChildDialog({ child }: { child: childProps }) {
             const lastName = String(formData.get("lastName") ?? "").trim();
             const dateOfBirth = String(formData.get("dateOfBirth") ?? "").trim();
             const dream = String(formData.get("dream") ?? "").trim();
-            const summary = String(formData.get("summary") ?? "").trim();
             const story = String(formData.get("story") ?? "").trim();
 
-            if (!firstName || !lastName || !dateOfBirth || !dream || !summary || !story) {
+            if (!firstName || !lastName || !dateOfBirth || !dream || !story) {
                 toast.error("Please fill in all required fields.");
                 return;
             }
@@ -167,18 +165,6 @@ export function UpdateChildDialog({ child }: { child: childProps }) {
                                 onChange={setImages}
                                 maxFiles={1}
                                 existingImageUrl={child.imageUrl}
-                            />
-                        </Field>
-
-                        <Field className="md:col-span-2">
-                            <Label htmlFor="summary">Child & Family Information</Label>
-                            <Textarea
-                                id="summary"
-                                defaultValue={child.summary}
-                                name="summary"
-                                rows={2}
-                                placeholder="Short summary about the child..."
-                                required
                             />
                         </Field>
 

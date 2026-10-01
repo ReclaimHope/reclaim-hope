@@ -22,7 +22,6 @@ async function main() {
           dateOfBirth: new Date(child.dateOfBirth),
           dream: child.dream,
           imageUrl: child.imageUrl,
-          summary: child.summary,
           story: child.story,
         },
       });

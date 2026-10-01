@@ -10,7 +10,6 @@ export interface ChildItem {
   age: number;
   dream: string;
   image: string;
-  summary: string;
   story: string | string[];
   isSponsored?: boolean;
   sponsorName?: string | null;

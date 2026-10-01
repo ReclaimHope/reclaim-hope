@@ -38,7 +38,6 @@ interface SponsorshipModalProps {
     age: number
     dream: string
     image: string
-    summary: string
     isSponsored?: boolean
   }
 }
@@ -243,11 +242,6 @@ export default function SponsorshipModal({
             <p className="text-lg font-semibold text-white">
               {child.age} years old &middot; Dreams of becoming a {child.dream}
             </p>
-            {child.summary && (
-              <p className="line-clamp-4 text-sm leading-relaxed text-slate-200">
-                {child.summary}
-              </p>
-            )}
             <div className="rounded-2xl bg-white/10 p-4 backdrop-blur-md">
               <div className="flex items-center justify-between text-sm">
                 <span className="font-medium text-slate-200">Selected plan</span>
