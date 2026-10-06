@@ -16,7 +16,11 @@ function SponsorPageContent() {
   const featuredRef = useRef<HTMLDivElement>(null);
 
   const { data: apiChildren, isLoading } = useSWR<any[]>('/api/children', fetcher, {
-    revalidateOnFocus: true,
+    // Children change rarely (admin-managed). Don't refetch on every tab
+    // focus — each refetch holds DB connections for seconds (remote PG),
+    // and focus-churn was stacking concurrent checkouts into pool timeouts.
+    revalidateOnFocus: false,
+    dedupingInterval: 60_000,
   });
 
   const childList: ChildItem[] = (apiChildren && apiChildren.length > 0)

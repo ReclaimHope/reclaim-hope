@@ -91,11 +91,12 @@ export async function POST(req: NextRequest) {
 
 export async function GET() {
   try {
-    // Lapse expired coverage so children become available again.
-    await prisma.sponsorship.updateMany({
-      where: { status: "ACTIVE", endedAt: { lte: new Date() } },
-      data: { status: "COMPLETED" },
-    });
+    // NOTE: no expiry write here on purpose. This is the hottest read
+    // endpoint on the site and a per-request updateMany doubled checkout
+    // time under latency, collapsing into P2024 pool timeouts under
+    // concurrent load. Expired rows are simply filtered out below; the
+    // status flip to COMPLETED happens on write paths (payment success,
+    // activation) via expireStaleSponsorships().
     const children = await prisma.child.findMany({
       include: {
         sponsorships: {
