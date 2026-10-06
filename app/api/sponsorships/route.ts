@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { createPendingSponsorship } from "@/app/actions/sponsorship";
 
 export async function GET() {
   try {
@@ -7,6 +8,7 @@ export async function GET() {
       include: {
         donor: true,
         child: true,
+        payments: { orderBy: { createdAt: "desc" } },
       },
       orderBy: { createdAt: "desc" },
     });
@@ -37,6 +39,16 @@ export async function GET() {
         dream: s.child.dream,
         imageUrl: s.child.imageUrl,
       },
+      latestPayment: s.payments[0]
+        ? {
+            id: s.payments[0].id,
+            reference: s.payments[0].reference,
+            invoiceNumber: s.payments[0].transactionId,
+            status: s.payments[0].status,
+            paidAt: s.payments[0].paidAt?.toISOString() || null,
+          }
+        : null,
+      paymentsCount: s.payments.length,
     }));
 
     return NextResponse.json(formatted, { status: 200 });
@@ -44,6 +56,81 @@ export async function GET() {
     console.error("Error fetching sponsorships:", error);
     return NextResponse.json(
       { success: false, error: "Failed to fetch sponsorships." },
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    const {
+      childId,
+      frequency,
+      currency,
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+      country,
+      address,
+      acceptedPolicy,
+    } = body || {};
+
+    if (!acceptedPolicy) {
+      return NextResponse.json(
+        { success: false, error: "You must accept the Refund & Cancellation Policy before continuing." },
+        { status: 400 }
+      );
+    }
+
+    if (!childId) {
+      return NextResponse.json(
+        { success: false, error: "Please select a child to sponsor." },
+        { status: 400 }
+      );
+    }
+
+    const result = await createPendingSponsorship({
+      childId,
+      frequency,
+      currency,
+      donor: {
+        firstName: firstName || "",
+        lastName: lastName || "",
+        email: email || "",
+        phoneNumber: phoneNumber || "",
+        country: country || "",
+        address: address || "",
+      },
+    });
+
+    if (!result.success || !result.payment) {
+      return NextResponse.json(
+        { success: false, error: result.error || "Failed to initiate sponsorship payment." },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json(
+      {
+        success: true,
+        invoiceNumber: result.payment.invoiceNumber,
+        paymentLinkUrl: result.payment.paymentLinkUrl,
+        publicKey: result.publicKey,
+        environment: result.environment,
+        paymentId: result.payment.id,
+        reference: result.payment.reference,
+        sponsorship: result.sponsorship,
+        payment: result.payment,
+        child: result.child,
+      },
+      { status: 201 }
+    );
+  } catch (error) {
+    console.error("Error creating sponsorship via API:", error);
+    return NextResponse.json(
+      { success: false, error: error instanceof Error ? error.message : "Failed to initiate sponsorship." },
       { status: 500 }
     );
   }

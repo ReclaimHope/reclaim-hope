@@ -118,16 +118,20 @@ export default function FeaturedChild({ child }: FeaturedChildProps) {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
-                      <span className="flex items-center gap-1.5">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                        $78/month or $936/year
-                      </span>
-                      <span className="flex items-center gap-1.5">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                        100% direct impact
-                      </span>
-                    </div>
+                      <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
+                        <span className="flex items-center gap-1.5">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                          $78/month or $936/year
+                        </span>
+                        <span className="flex items-center gap-1.5">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                          100,000 RWF/month or 1.2M RWF/year
+                        </span>
+                        <span className="flex items-center gap-1.5">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                          100% direct impact
+                        </span>
+                      </div>
 
                     <button
                       onClick={() => setIsModalOpen(true)}

@@ -36,7 +36,7 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 async function copyText(text: string) {
   try {
     await navigator.clipboard.writeText(text);
-    toast.success('Subscription reference copied. Paste it into the IremboPay dashboard.');
+    toast.success('Reference copied to clipboard.');
   } catch {
     toast.error('Could not copy to clipboard.');
   }
@@ -59,9 +59,13 @@ export default function SponsorsTable() {
     subscriptionReference: string | null;
     requestedStartDate: string | null;
     chargesCount: number | null;
+    startedAt: string | null;
+    endedAt: string | null;
     createdAt: string;
     donor: { name: string; email: string; phoneNumber: string | null; country: string | null; address: string | null };
     child: { name: string };
+    latestPayment: { id: string; reference: string; invoiceNumber: string | null; status: string; paidAt: string | null } | null;
+    paymentsCount: number;
   }[] = Array.isArray(sponsorships) ? sponsorships : [];
 
   const counts = {
@@ -81,6 +85,8 @@ export default function SponsorsTable() {
       s.donor.phoneNumber ?? '',
       s.child.name,
       s.subscriptionReference ?? '',
+      s.latestPayment?.reference ?? '',
+      s.latestPayment?.invoiceNumber ?? '',
       s.status,
     ].some((v) => v.toLowerCase().includes(q));
   });
@@ -126,19 +132,17 @@ export default function SponsorsTable() {
 
   const totalActive = list.filter((s) => s.status === 'ACTIVE').length || 0;
   const totalPending = list.filter((s) => s.status === 'PENDING').length || 0;
-  const totalRevenue = list
-    .filter((s) => s.status === 'ACTIVE')
-    .reduce((sum, s) => sum + Number(s.amount), 0) || 0;
+  const totalCount = list.length || 0;
 
   return (
     <div className="space-y-6 mx-auto px-4 max-w-7xl sm:px-6 lg:px-8 py-6">
       {/* Top Header */}
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Manage Sponsors &amp; Subscriptions</h2>
+          <h2 className="text-2xl font-bold text-gray-900">Manage Sponsors &amp; Sponsorships</h2>
           <p className="text-sm text-gray-500">
-            Review sponsorship requests, copy the subscription reference into the IremboPay dashboard
-            (customer + subscription), then activate here.
+            Sponsorships are paid online as one-time IremboPay invoices (monthly = 30 days,
+            yearly = 365 days coverage). Successful payments activate automatically.
           </p>
         </div>
         <div className="relative w-full md:w-80">
@@ -146,7 +150,7 @@ export default function SponsorsTable() {
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search donor, child, reference..."
+            placeholder="Search donor, child, payment ref..."
             aria-label="Search sponsorships"
             className="pl-9 bg-white"
           />
@@ -200,9 +204,9 @@ export default function SponsorsTable() {
         <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-yellow-700">
-              Active Commitment Vol.
+              Total Sponsorships
             </p>
-            <h3 className="text-2xl font-extrabold text-gray-900 mt-1">${totalRevenue.toLocaleString()} USD</h3>
+            <h3 className="text-2xl font-extrabold text-gray-900 mt-1">{totalCount}</h3>
           </div>
           <div className="w-12 h-12 rounded-xl bg-yellow-100 text-yellow-700 flex items-center justify-center">
             <DollarSign className="w-6 h-6" />
@@ -218,8 +222,8 @@ export default function SponsorsTable() {
               <TableHead className="font-semibold text-gray-700">Donor</TableHead>
               <TableHead className="font-semibold text-gray-700">Child</TableHead>
               <TableHead className="font-semibold text-gray-700">Plan</TableHead>
-              <TableHead className="font-semibold text-gray-700">Start / Charges</TableHead>
-              <TableHead className="font-semibold text-gray-700">Subscription Ref</TableHead>
+              <TableHead className="font-semibold text-gray-700">Coverage Period</TableHead>
+              <TableHead className="font-semibold text-gray-700">Payment</TableHead>
               <TableHead className="font-semibold text-gray-700">Status</TableHead>
               <TableHead className="font-semibold text-gray-700 text-right">Actions</TableHead>
             </TableRow>
@@ -266,7 +270,9 @@ export default function SponsorsTable() {
 
                       <TableCell>
                         <div className="font-semibold text-gray-900">
-                          ${s.amount} {s.currency}
+                          {s.currency === 'RWF'
+                            ? `${Number(s.amount).toLocaleString()} ${s.currency}`
+                            : `$${s.amount} ${s.currency}`}
                         </div>
                         <div className="text-xs text-gray-500 capitalize">
                           {s.frequency.toLowerCase()}
@@ -274,22 +280,32 @@ export default function SponsorsTable() {
                       </TableCell>
 
                       <TableCell className="text-xs text-gray-600">
-                        {s.requestedStartDate ? (
-                          <div>Starts: {new Date(s.requestedStartDate).toLocaleDateString()}</div>
+                        {s.startedAt ? (
+                          <div>From: {new Date(s.startedAt).toLocaleDateString()}</div>
                         ) : (
-                          <div className="text-gray-400">—</div>
+                          <div className="text-gray-400">Not started</div>
                         )}
                         <div className="text-gray-500">
-                          {s.chargesCount ? `${s.chargesCount}x charges` : 'Indefinite'}
+                          {s.endedAt ? `Until: ${new Date(s.endedAt).toLocaleDateString()}` : s.status === 'ACTIVE' ? 'Ongoing' : '—'}
                         </div>
                       </TableCell>
 
                       <TableCell>
-                        {s.subscriptionReference ? (
+                        {s.latestPayment ? (
+                          <div className="text-xs">
+                            <div className="font-mono font-semibold text-gray-800">{s.latestPayment.reference}</div>
+                            <div className="text-gray-500">
+                              {s.latestPayment.status}
+                              {s.latestPayment.paidAt
+                                ? ` · ${new Date(s.latestPayment.paidAt).toLocaleDateString()}`
+                                : ''}
+                            </div>
+                          </div>
+                        ) : s.subscriptionReference ? (
                           <button
                             type="button"
                             onClick={() => copyText(s.subscriptionReference as string)}
-                            title="Copy for IremboPay dashboard"
+                            title="Copy reference"
                             className="inline-flex items-center gap-1.5 font-mono text-xs text-gray-800 font-semibold bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-lg px-2 py-1"
                           >
                             {s.subscriptionReference}
@@ -393,40 +409,35 @@ export default function SponsorsTable() {
                             </div>
                             <div className="rounded-xl bg-white border border-gray-200 p-4">
                               <p className="font-bold text-gray-900 mb-2 uppercase tracking-wider text-[11px]">
-                                Subscription setup (for dashboard)
+                                Plan &amp; coverage
                               </p>
                               <dl className="space-y-1.5 text-gray-700">
                                 <div className="flex justify-between gap-2">
                                   <dt className="text-gray-500">Plan</dt>
                                   <dd className="font-semibold text-right capitalize">
-                                    {s.frequency.toLowerCase()} (${s.amount} {s.currency})
+                                    {s.frequency.toLowerCase()} ({s.currency === 'RWF' ? `${Number(s.amount).toLocaleString()} ${s.currency}` : `$${s.amount} ${s.currency}`})
                                   </dd>
                                 </div>
                                 <div className="flex justify-between gap-2">
-                                  <dt className="text-gray-500">Start date</dt>
+                                  <dt className="text-gray-500">Coverage</dt>
                                   <dd className="font-semibold text-right">
-                                    {s.requestedStartDate
-                                      ? new Date(s.requestedStartDate).toLocaleDateString()
-                                      : '—'}
+                                    {s.startedAt
+                                      ? `${new Date(s.startedAt).toLocaleDateString()} → ${s.endedAt ? new Date(s.endedAt).toLocaleDateString() : '—'}`
+                                      : 'Not started (payment pending)'}
                                   </dd>
                                 </div>
                                 <div className="flex justify-between gap-2">
-                                  <dt className="text-gray-500">Charges</dt>
+                                  <dt className="text-gray-500">Payment</dt>
                                   <dd className="font-semibold text-right">
-                                    {s.chargesCount ? `${s.chargesCount}x` : 'Indefinite'}
+                                    {s.latestPayment
+                                      ? `${s.latestPayment.reference} (${s.latestPayment.status})`
+                                      : (s.subscriptionReference || '—')}
                                   </dd>
                                 </div>
                                 <div className="flex justify-between gap-2">
-                                  <dt className="text-gray-500">Reference</dt>
-                                  <dd>
-                                    <button
-                                      type="button"
-                                      onClick={() => copyText(s.subscriptionReference as string)}
-                                      className="inline-flex items-center gap-1 font-mono font-semibold text-gray-900 hover:text-emerald-700"
-                                    >
-                                      {s.subscriptionReference}
-                                      <Copy className="w-3 h-3" />
-                                    </button>
+                                  <dt className="text-gray-500">Invoice</dt>
+                                  <dd className="font-mono font-semibold text-right">
+                                    {s.latestPayment?.invoiceNumber || '—'}
                                   </dd>
                                 </div>
                               </dl>
@@ -466,12 +477,12 @@ export default function SponsorsTable() {
 
       {/* Admin workflow hint */}
       <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 text-xs text-blue-800 leading-relaxed">
-        <p className="font-semibold text-blue-900 mb-1">Manual subscription workflow</p>
+        <p className="font-semibold text-blue-900 mb-1">Online sponsorship payments</p>
         <p>
-          1. Click a subscription reference to copy it. 2. In the IremboPay dashboard, create the
-          customer (name, email, phone) and generate the subscription with the matching plan, start
-          date, charge count, and pasted reference. 3. Back here, click Activate. Cancel the request
-          here as well if the sponsor withdraws (and cancel it in the dashboard too).
+          Sponsors pay online via the IremboPay widget: monthly covers 30 days, yearly covers 365
+          days. Successful payments activate automatically via webhook. PENDING rows are unpaid
+          (abandoned checkout) — cancel them if needed. The Activate button remains for legacy
+          manual rows or offline-verified edge cases.
         </p>
       </div>
     </div>

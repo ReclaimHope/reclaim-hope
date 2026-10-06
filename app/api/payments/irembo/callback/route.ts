@@ -6,6 +6,7 @@ import {
   fetchIremboInvoiceDetails,
   parseIremboDate,
 } from "@/lib/payments/iremboPay";
+import { getSponsorshipPeriodDays } from "@/lib/sponsorship-plans";
 
 /**
  * Official IremboPay Webhook Callback Endpoint
@@ -19,6 +20,7 @@ import {
  * - Validates invoice, transactionId, amount, and currency.
  * - Transitions Payment: PENDING -> SUCCESSFUL
  * - Transitions Donation: PENDING -> COMPLETED
+ * - Activates Sponsorship: PENDING -> ACTIVE (coverage period from now)
  */
 export async function POST(request: NextRequest) {
   try {
@@ -95,6 +97,7 @@ export async function POST(request: NextRequest) {
       },
       include: {
         donation: true,
+        sponsorship: true,
       },
     });
 
@@ -214,14 +217,33 @@ export async function POST(request: NextRequest) {
           },
         });
       }
+
+      // Sponsorship: PENDING -> ACTIVE with coverage period (one-time payment)
+      if (payment.sponsorshipId && payment.sponsorship) {
+        const periodDays = getSponsorshipPeriodDays(
+          payment.sponsorship.frequency as "MONTHLY" | "YEARLY",
+        );
+        const endedAt = new Date(paidAtDate);
+        endedAt.setDate(endedAt.getDate() + periodDays);
+        await tx.sponsorship.update({
+          where: { id: payment.sponsorshipId },
+          data: {
+            status: "ACTIVE",
+            startedAt: paidAtDate,
+            endedAt,
+          },
+        });
+      }
     });
 
     console.log(
-      `[IremboPay Webhook] Successfully processed Payment ${payment.id} and Donation ${payment.donationId}`
+      `[IremboPay Webhook] Successfully processed Payment ${payment.id} (Donation ${payment.donationId || "-"}, Sponsorship ${payment.sponsorshipId || "-"})`
     );
 
     revalidatePath("/donate");
+    revalidatePath("/sponsor");
     revalidatePath("/admin/donations");
+    revalidatePath("/admin/sponsors");
     revalidatePath("/admin/payments");
 
     return NextResponse.json(
@@ -230,6 +252,7 @@ export async function POST(request: NextRequest) {
         message: "Payment successfully verified and completed",
         paymentId: payment.id,
         donationId: payment.donationId,
+        sponsorshipId: payment.sponsorshipId,
       },
       { status: 200 }
     );

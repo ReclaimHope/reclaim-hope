@@ -91,10 +91,18 @@ export async function POST(req: NextRequest) {
 
 export async function GET() {
   try {
+    // Lapse expired coverage so children become available again.
+    await prisma.sponsorship.updateMany({
+      where: { status: "ACTIVE", endedAt: { lte: new Date() } },
+      data: { status: "COMPLETED" },
+    });
     const children = await prisma.child.findMany({
       include: {
         sponsorships: {
-          where: { status: "ACTIVE" },
+          where: {
+            status: "ACTIVE",
+            OR: [{ endedAt: null }, { endedAt: { gt: new Date() } }],
+          },
           include: { donor: true },
         },
       },

@@ -8,6 +8,7 @@ import {
   fetchIremboInvoiceDetails,
   parseIremboDate,
 } from "@/lib/payments/iremboPay"
+import { getSponsorshipPeriodDays } from "@/lib/sponsorship-plans"
 
 export type DonationCategoryType = 'MEALS' | 'HEALTH' | 'EDUCATION' | 'LOVE_GIFT'
 
@@ -184,6 +185,8 @@ export async function createPendingDonation(input: CreateDonationInput) {
 
 /**
  * Checks authoritative payment status from database and cross-checks IremboPay API if needed.
+ * Handles both donation and sponsorship payments: a PAID sponsorship
+ * invoice activates the sponsorship for its coverage period.
  */
 export async function getPaymentStatusAction(referenceOrInvoice: string) {
   try {
@@ -197,6 +200,7 @@ export async function getPaymentStatusAction(referenceOrInvoice: string) {
       },
       include: {
         donation: true,
+        sponsorship: true,
       },
     })
 
@@ -232,16 +236,32 @@ export async function getPaymentStatusAction(referenceOrInvoice: string) {
                 data: { status: "COMPLETED" },
               })
             }
+
+            if (payment.sponsorshipId && payment.sponsorship) {
+              const startedAt = new Date()
+              const periodDays = getSponsorshipPeriodDays(
+                payment.sponsorship.frequency as "MONTHLY" | "YEARLY",
+              )
+              const endedAt = new Date(startedAt)
+              endedAt.setDate(endedAt.getDate() + periodDays)
+              await tx.sponsorship.update({
+                where: { id: payment.sponsorshipId },
+                data: { status: "ACTIVE", startedAt, endedAt },
+              })
+            }
           })
 
           revalidatePath("/donate")
+          revalidatePath("/sponsor")
           revalidatePath("/admin/donations")
+          revalidatePath("/admin/sponsors")
           revalidatePath("/admin/payments")
 
           return {
             success: true,
             status: "SUCCESSFUL",
-            donationStatus: "COMPLETED",
+            donationStatus: payment.donationId ? "COMPLETED" : null,
+            sponsorshipStatus: payment.sponsorshipId ? "ACTIVE" : null,
             paidAt: details.paidAt || new Date().toISOString(),
           }
         }
@@ -262,6 +282,7 @@ export async function getPaymentStatusAction(referenceOrInvoice: string) {
       success: true,
       status: payment.status,
       donationStatus: payment.donation?.status || null,
+      sponsorshipStatus: payment.sponsorship?.status || null,
       paidAt: payment.paidAt?.toISOString() || null,
     }
   } catch (error) {

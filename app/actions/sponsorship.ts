@@ -4,8 +4,17 @@ import { prisma } from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
 import {
   getSponsorshipPlan,
+  SponsorshipCurrencyType,
   SponsorshipFrequencyType,
 } from "@/lib/sponsorship-plans"
+import {
+  expireStaleSponsorships,
+  getCoverageEndDate,
+} from "@/lib/sponsorship-helpers"
+import {
+  createIremboInvoice,
+  getIremboConfig,
+} from "@/lib/payments/iremboPay"
 
 export interface DonorInput {
   firstName: string
@@ -26,6 +35,13 @@ export interface CreateSponsorshipRequestInput {
   chargesCount?: number | null
 }
 
+export interface CreatePendingSponsorshipInput {
+  childId: string
+  donor: DonorInput
+  frequency: SponsorshipFrequencyType
+  currency: SponsorshipCurrencyType
+}
+
 function generateReference(prefix: string): string {
   const timestamp = Date.now().toString(36).toUpperCase()
   const random = Math.random().toString(36).substring(2, 6).toUpperCase()
@@ -39,10 +55,14 @@ function generateReference(prefix: string): string {
  */
 export async function getChildrenWithStatus() {
   try {
+    await expireStaleSponsorships()
     const dbChildren = await prisma.child.findMany({
       include: {
         sponsorships: {
-          where: { status: "ACTIVE" },
+          where: {
+            status: "ACTIVE",
+            OR: [{ endedAt: null }, { endedAt: { gt: new Date() } }],
+          },
           include: { donor: true },
         },
       },
@@ -98,10 +118,12 @@ function calculateAge(dateOfBirth: Date): number {
  */
 export async function checkChildAvailability(childId: string) {
   try {
+    await expireStaleSponsorships(childId)
     const activeSponsorship = await prisma.sponsorship.findFirst({
       where: {
         childId,
         status: "ACTIVE",
+        OR: [{ endedAt: null }, { endedAt: { gt: new Date() } }],
       },
     })
     return { isAvailable: !activeSponsorship, activeSponsorship }
@@ -257,6 +279,167 @@ export async function createSponsorshipRequest(input: CreateSponsorshipRequestIn
 }
 
 /**
+ * Step 1: Sponsor pays for one coverage period via the IremboPay widget
+ * (same one-time invoice flow as donations, same RWF/USD accounts +
+ * product identifiers — selected by currency).
+ *
+ * Creates a PENDING sponsorship + PENDING payment, then an IremboPay
+ * invoice. On successful payment (webhook or status poll) the sponsorship
+ * becomes ACTIVE until startedAt + 30/365 days.
+ */
+export async function createPendingSponsorship(input: CreatePendingSponsorshipInput) {
+  try {
+    const { childId, donor: donorInput, frequency, currency } = input
+
+    if (!donorInput.firstName?.trim() || !donorInput.lastName?.trim() || !donorInput.email?.trim()) {
+      return { success: false, error: "Please provide first name, last name, and a valid email address." }
+    }
+
+    if (frequency !== "MONTHLY" && frequency !== "YEARLY") {
+      return { success: false, error: "Please choose a valid sponsorship plan (Monthly or Yearly)." }
+    }
+    if (currency !== "USD" && currency !== "RWF") {
+      return { success: false, error: "Currency must be either RWF or USD." }
+    }
+
+    const plan = getSponsorshipPlan(frequency, currency)
+    if (!plan) {
+      return { success: false, error: "Selected plan is not available." }
+    }
+
+    const child = await prisma.child.findUnique({ where: { id: childId } })
+    if (!child) {
+      return { success: false, error: "Selected child was not found." }
+    }
+
+    await expireStaleSponsorships(child.id)
+
+    // Business Rule: one child can have only one active (unexpired) sponsor.
+    const existingActiveSponsorship = await prisma.sponsorship.findFirst({
+      where: {
+        childId: child.id,
+        status: "ACTIVE",
+        OR: [{ endedAt: null }, { endedAt: { gt: new Date() } }],
+      },
+    })
+    if (existingActiveSponsorship) {
+      return {
+        success: false,
+        error: `${child.firstName} currently has an active sponsor and cannot be sponsored again at this time.`,
+      }
+    }
+
+    // Upsert donor by email (one donor may sponsor multiple children).
+    const cleanEmail = donorInput.email.trim().toLowerCase()
+    let donor = await prisma.donor.findFirst({ where: { email: cleanEmail } })
+    if (donor) {
+      donor = await prisma.donor.update({
+        where: { id: donor.id },
+        data: {
+          firstName: donorInput.firstName.trim(),
+          lastName: donorInput.lastName.trim(),
+          phoneNumber: donorInput.phoneNumber?.trim() || null,
+          country: donorInput.country?.trim() || null,
+          address: donorInput.address?.trim() || null,
+        },
+      })
+    } else {
+      donor = await prisma.donor.create({
+        data: {
+          firstName: donorInput.firstName.trim(),
+          lastName: donorInput.lastName.trim(),
+          email: cleanEmail,
+          phoneNumber: donorInput.phoneNumber?.trim() || null,
+          country: donorInput.country?.trim() || null,
+          address: donorInput.address?.trim() || null,
+        },
+      })
+    }
+
+    const reference = generateReference("SPON")
+
+    const { sponsorship, payment } = await prisma.$transaction(async (tx) => {
+      const newSponsorship = await tx.sponsorship.create({
+        data: {
+          donorId: donor.id,
+          childId: child.id,
+          amount: plan.amount,
+          currency: plan.currency,
+          frequency,
+          status: "PENDING",
+          subscriptionReference: reference,
+        },
+      })
+      const newPayment = await tx.payment.create({
+        data: {
+          sponsorshipId: newSponsorship.id,
+          reference,
+          amount: plan.amount,
+          currency: plan.currency,
+          provider: "IPAY",
+          status: "PENDING",
+        },
+      })
+      return { sponsorship: newSponsorship, payment: newPayment }
+    })
+
+    const donorName = `${donor.firstName} ${donor.lastName}`.trim()
+    const invoice = await createIremboInvoice({
+      transactionId: payment.reference,
+      amount: plan.amount,
+      currency: plan.currency as "RWF" | "USD",
+      description: `Sponsorship (${frequency}) for ${child.firstName} ${child.lastName} - Reclaim Hope`,
+      customer: {
+        name: donorName,
+        email: donor.email || undefined,
+        phoneNumber: donor.phoneNumber || undefined,
+      },
+    })
+
+    await prisma.payment.update({
+      where: { id: payment.id },
+      data: { transactionId: invoice.invoiceNumber },
+    })
+
+    const config = getIremboConfig()
+
+    revalidatePath("/sponsor")
+    revalidatePath("/admin/sponsors")
+    revalidatePath("/admin/payments")
+
+    return {
+      success: true,
+      publicKey: config.publicKey,
+      environment: config.environment,
+      sponsorship: {
+        id: sponsorship.id,
+        amount: plan.amount,
+        currency: plan.currency,
+        frequency: sponsorship.frequency,
+        status: sponsorship.status,
+        coverageDays: plan.days,
+      },
+      payment: {
+        id: payment.id,
+        reference: payment.reference,
+        amount: plan.amount,
+        currency: plan.currency,
+        status: payment.status,
+        invoiceNumber: invoice.invoiceNumber,
+        paymentLinkUrl: invoice.paymentLinkUrl || null,
+      },
+      child: {
+        id: child.id,
+        name: `${child.firstName} ${child.lastName}`.trim(),
+      },
+    }
+  } catch (error: unknown) {
+    console.error("Error creating pending sponsorship:", error)
+    return { success: false, error: error instanceof Error ? error.message : "Failed to initiate sponsorship payment." }
+  }
+}
+
+/**
  * Admin: list all sponsorship requests with donor + child details,
  * newest first. Used by /admin/sponsors.
  */
@@ -266,6 +449,7 @@ export async function getSponsorshipRequests() {
       include: {
         donor: true,
         child: true,
+        payments: { orderBy: { createdAt: "desc" } },
       },
       orderBy: { createdAt: "desc" },
     })
@@ -294,6 +478,16 @@ export async function getSponsorshipRequests() {
         id: s.child.id,
         name: `${s.child.firstName} ${s.child.lastName}`.trim(),
       },
+      latestPayment: s.payments[0]
+        ? {
+            id: s.payments[0].id,
+            reference: s.payments[0].reference,
+            invoiceNumber: s.payments[0].transactionId,
+            status: s.payments[0].status,
+            paidAt: s.payments[0].paidAt?.toISOString() || null,
+          }
+        : null,
+      paymentsCount: s.payments.length,
     }))
   } catch (error) {
     console.error("Error fetching sponsorship requests:", error)
@@ -302,9 +496,9 @@ export async function getSponsorshipRequests() {
 }
 
 /**
- * Admin: activate a PENDING request after creating the customer +
- * subscription in the IremboPay dashboard. The child becomes exclusively
- * sponsored from this point.
+ * Admin: manually activate a PENDING sponsorship (legacy manual-dashboard
+ * rows, or edge cases where online payment was verified offline).
+ * Grants the standard coverage period from now.
  */
 export async function activateSponsorshipRequest(sponsorshipId: string) {
   try {
@@ -319,22 +513,27 @@ export async function activateSponsorshipRequest(sponsorshipId: string) {
       return { success: false, error: `Only pending requests can be activated (current status: ${sponsorship.status}).` }
     }
 
+    await expireStaleSponsorships(sponsorship.childId)
+
     // Guard: child must still have no other active sponsor
     const conflicting = await prisma.sponsorship.findFirst({
       where: {
         childId: sponsorship.childId,
         status: "ACTIVE",
+        OR: [{ endedAt: null }, { endedAt: { gt: new Date() } }],
       },
     })
     if (conflicting) {
       return { success: false, error: "This child already has another active sponsor." }
     }
 
+    const startedAt = new Date()
     await prisma.sponsorship.update({
       where: { id: sponsorship.id },
       data: {
         status: "ACTIVE",
-        startedAt: new Date(),
+        startedAt,
+        endedAt: getCoverageEndDate(sponsorship.frequency as SponsorshipFrequencyType, startedAt),
       },
     })
 
@@ -385,7 +584,7 @@ export async function cancelSponsorshipRequest(sponsorshipId: string) {
   }
 }
 
-/* NOTE: The old payment-simulation flow (verifyPaymentAction with fake
- * TXN-... transaction ids) was removed. Sponsorships are now subscription
- * requests activated by the admin after manual setup in the IremboPay
- * dashboard. See activateSponsorshipRequest / cancelSponsorshipRequest. */
+/* NOTE: Sponsorships are paid as ONE-TIME IremboPay invoices (same widget
+ * flow as donations). A successful payment activates the sponsorship for
+ * its coverage period (30 / 365 days). activateSponsorshipRequest remains
+ * for legacy manual rows / offline-verified edge cases. */
