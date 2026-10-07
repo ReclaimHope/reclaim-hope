@@ -98,7 +98,6 @@ export function LoginForm({
               name="username"
               type="text"
               placeholder="Enter admin username"
-              value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
               autoComplete="username"
@@ -123,7 +122,6 @@ export function LoginForm({
               name="password"
               type={showPassword ? "text" : "password"}
               placeholder="••••••••••••"
-              value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               autoComplete="current-password"

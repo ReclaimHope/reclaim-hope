@@ -67,12 +67,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         { title: "Reports", url: "/admin/reports", icon: <ClipboardList /> },
       ],
     },
-    {
-      label: "System",
-      items: [
-        { title: "Payment Test", url: "/admin/payment-test", icon: <FlaskConical /> },
-      ],
-    },
+    
   ]
 
   const handleLogout = () => {
