@@ -423,7 +423,7 @@ export default function SponsorshipModal({
                           : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                       }`}
                     >
-                      {c === 'USD' ? 'USD (Card)' : 'RWF (MoMo)'}
+                      {c === 'USD' ? 'USD' : 'RWF'}
                     </button>
                   ))}
                 </div>
