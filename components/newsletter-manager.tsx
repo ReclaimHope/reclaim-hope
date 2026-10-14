@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useTransition } from "react"
-import { Pencil, Plus, Trash2 } from "lucide-react"
+import { useMemo, useState, useTransition } from "react"
+import { Pencil, Plus, Search, Trash2 } from "lucide-react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -11,6 +11,13 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { ImageDropzone } from "@/components/image-drop-area"
 import { createNewsletterAction, deleteNewsletterAction, updateNewsletterAction } from "@/app/actions/newsletters"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 type Newsletter = {
   id: string
@@ -148,6 +155,8 @@ function NewsletterForm({ newsletter, onSaved }: NewsletterFormProps) {
 export function NewsletterManager({ initialNewsletters }: { initialNewsletters: Newsletter[] }) {
   const [newsletters, setNewsletters] = useState(initialNewsletters)
   const [isDeleting, startDeleting] = useTransition()
+  const [search, setSearch] = useState("")
+  const [sort, setSort] = useState<"newest" | "oldest" | "title">("newest")
 
   const refresh = async () => {
     const response = await fetch("/api/admin/newsletters", { cache: "no-store" })
@@ -168,6 +177,18 @@ export function NewsletterManager({ initialNewsletters }: { initialNewsletters: 
     })
   }
 
+  const visible = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    const rows = newsletters.filter(
+      (n) => !q || n.title.toLowerCase().includes(q) || n.summary.toLowerCase().includes(q)
+    );
+    return [...rows].sort((a, b) => {
+      if (sort === "title") return a.title.localeCompare(b.title);
+      const diff = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+      return sort === "oldest" ? diff : -diff;
+    });
+  }, [newsletters, search, sort]);
+
   return (
     <div className="mx-auto w-full max-w-7xl space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -178,13 +199,40 @@ export function NewsletterManager({ initialNewsletters }: { initialNewsletters: 
         <NewsletterForm onSaved={refresh} />
       </div>
 
-      {newsletters.length === 0 ? (
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+        <div className="relative w-full sm:w-80">
+          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search newsletters…"
+            aria-label="Search newsletters"
+            className="bg-white pl-9"
+          />
+        </div>
+        <Select value={sort} onValueChange={(v) => setSort(v as typeof sort)}>
+          <SelectTrigger size="sm" className="h-8 min-w-40 bg-white" aria-label="Sort newsletters">
+            <SelectValue placeholder="Sort" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="newest">Newest first</SelectItem>
+            <SelectItem value="oldest">Oldest first</SelectItem>
+            <SelectItem value="title">Title A–Z</SelectItem>
+          </SelectContent>
+        </Select>
+        <p className="text-xs text-muted-foreground sm:ml-auto" aria-live="polite">
+          Showing <span className="font-semibold text-foreground">{visible.length}</span> of{" "}
+          <span className="font-semibold text-foreground">{newsletters.length}</span> newsletters
+        </p>
+      </div>
+
+      {visible.length === 0 ? (
         <div className="rounded-xl border border-dashed border-gray-300 bg-white p-12 text-center text-gray-500">
-          No newsletters have been added yet.
+          {newsletters.length === 0 ? "No newsletters have been added yet." : "No newsletters match your search."}
         </div>
       ) : (
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {newsletters.map((newsletter) => (
+          {visible.map((newsletter) => (
             <article key={newsletter.id} className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
               {newsletter.imageUrl ? (
                 <img src={getImageSrc(newsletter.imageUrl)} alt="" className="h-48 w-full object-cover" />

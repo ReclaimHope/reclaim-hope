@@ -1,4 +1,5 @@
 import { ReportManager } from "@/components/report-manager"
+import { ExcelReportDownloader } from "@/components/excel-report-downloader"
 import { prisma } from "@/lib/prisma"
 
 export default async function ReportsPage() {
@@ -7,5 +8,10 @@ export default async function ReportsPage() {
     orderBy: { createdAt: "desc" },
   })
 
-  return <ReportManager initialReports={reports} />
+  return (
+    <div className="mx-auto w-full max-w-7xl space-y-6">
+      <ExcelReportDownloader />
+      <ReportManager initialReports={reports} />
+    </div>
+  )
 }

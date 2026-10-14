@@ -1,6 +1,8 @@
 'use client';
 
 import useSWR, { mutate } from 'swr';
+import { useMemo, useState } from 'react';
+import { Fragment } from 'react';
 import {
   Table,
   TableBody,
@@ -28,8 +30,14 @@ import {
   cancelSponsorshipRequest,
 } from '@/app/actions/sponsorship';
 import { toast } from 'sonner';
-import { useState } from 'react';
-import { Fragment } from 'react';
+import {
+  ClearFiltersButton,
+  ExportButton,
+  ResultCount,
+  SortableTh,
+  TableFilter,
+  type SortDir,
+} from '@/components/admin-table-controls';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -48,6 +56,10 @@ export default function SponsorsTable() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<'ALL' | 'PENDING' | 'ACTIVE' | 'CANCELLED'>('ALL');
+  const [frequencyFilter, setFrequencyFilter] = useState('ALL');
+  const [currencyFilter, setCurrencyFilter] = useState('ALL');
+  const [sortKey, setSortKey] = useState('createdAt');
+  const [sortDir, setSortDir] = useState<SortDir>('desc');
 
   // The API returns { success: false, ... } on error — never call .filter on that.
   const list: {
@@ -66,7 +78,7 @@ export default function SponsorsTable() {
     child: { name: string };
     latestPayment: { id: string; reference: string; invoiceNumber: string | null; status: string; paidAt: string | null } | null;
     paymentsCount: number;
-  }[] = Array.isArray(sponsorships) ? sponsorships : [];
+  }[] = useMemo(() => (Array.isArray(sponsorships) ? sponsorships : []), [sponsorships]);
 
   const counts = {
     ALL: list.length,
@@ -75,21 +87,63 @@ export default function SponsorsTable() {
     CANCELLED: list.filter((s) => s.status === 'CANCELLED').length,
   };
 
-  const visible = list.filter((s) => {
-    if (statusFilter !== 'ALL' && s.status !== statusFilter) return false;
-    const q = search.trim().toLowerCase();
-    if (!q) return true;
-    return [
-      s.donor.name,
-      s.donor.email,
-      s.donor.phoneNumber ?? '',
-      s.child.name,
-      s.subscriptionReference ?? '',
-      s.latestPayment?.reference ?? '',
-      s.latestPayment?.invoiceNumber ?? '',
-      s.status,
-    ].some((v) => v.toLowerCase().includes(q));
-  });
+  const handleSort = (key: string) => {
+    if (sortKey === key) setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));
+    else {
+      setSortKey(key);
+      setSortDir(key === 'donor' || key === 'child' ? 'asc' : 'desc');
+    }
+  };
+
+  const visible = useMemo(() => {
+    const rows = list.filter((s) => {
+      if (statusFilter !== 'ALL' && s.status !== statusFilter) return false;
+      if (frequencyFilter !== 'ALL' && s.frequency !== frequencyFilter) return false;
+      if (currencyFilter !== 'ALL' && s.currency !== currencyFilter) return false;
+      const q = search.trim().toLowerCase();
+      if (!q) return true;
+      return [
+        s.donor.name,
+        s.donor.email,
+        s.donor.phoneNumber ?? '',
+        s.child.name,
+        s.subscriptionReference ?? '',
+        s.latestPayment?.reference ?? '',
+        s.latestPayment?.invoiceNumber ?? '',
+        s.status,
+      ].some((v) => v.toLowerCase().includes(q));
+    });
+    const dir = sortDir === 'asc' ? 1 : -1;
+    return [...rows].sort((a, b) => {
+      switch (sortKey) {
+        case 'donor':
+          return a.donor.name.localeCompare(b.donor.name) * dir;
+        case 'child':
+          return a.child.name.localeCompare(b.child.name) * dir;
+        case 'amount':
+          return (Number(a.amount) - Number(b.amount)) * dir;
+        case 'status':
+          return a.status.localeCompare(b.status) * dir;
+        case 'startedAt':
+          return ((a.startedAt ? new Date(a.startedAt).getTime() : 0) - (b.startedAt ? new Date(b.startedAt).getTime() : 0)) * dir;
+        case 'createdAt':
+        default:
+          return (new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()) * dir;
+      }
+    });
+  }, [list, search, statusFilter, frequencyFilter, currencyFilter, sortKey, sortDir]);
+
+  const clearTableFilters = () => {
+    setSearch('');
+    setStatusFilter('ALL');
+    setFrequencyFilter('ALL');
+    setCurrencyFilter('ALL');
+    setSortKey('createdAt');
+    setSortDir('desc');
+  };
+
+  const hasTableFilters =
+    search.trim() !== '' || statusFilter !== 'ALL' || frequencyFilter !== 'ALL' || currencyFilter !== 'ALL';
 
   const refresh = () => {
     mutate('/api/sponsorships');
@@ -145,14 +199,27 @@ export default function SponsorsTable() {
             yearly = 365 days coverage). Successful payments activate automatically.
           </p>
         </div>
-        <div className="relative w-full md:w-80">
-          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search donor, child, payment ref..."
-            aria-label="Search sponsorships"
-            className="pl-9 bg-white"
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          <div className="relative w-full md:w-80">
+            <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search donor, child, payment ref..."
+              aria-label="Search sponsorships"
+              className="pl-9 bg-white"
+            />
+          </div>
+          <ExportButton
+            dataset="sponsorships"
+            query={{
+              search: search.trim(),
+              status: statusFilter,
+              frequency: frequencyFilter,
+              currency: currencyFilter,
+              sort: sortKey,
+              dir: sortDir,
+            }}
           />
         </div>
       </div>
@@ -173,6 +240,33 @@ export default function SponsorsTable() {
             {status === 'ALL' ? 'All' : status.charAt(0) + status.slice(1).toLowerCase()} ({counts[status]})
           </button>
         ))}
+      </div>
+
+      <div className="flex flex-wrap items-center gap-3">
+        <TableFilter
+          label="Plan"
+          value={frequencyFilter}
+          options={[
+            { value: 'ALL', label: 'All plans' },
+            { value: 'MONTHLY', label: 'Monthly' },
+            { value: 'YEARLY', label: 'Yearly' },
+          ]}
+          onChange={setFrequencyFilter}
+        />
+        <TableFilter
+          label="Currency"
+          value={currencyFilter}
+          options={[
+            { value: 'ALL', label: 'All currencies' },
+            { value: 'USD', label: 'USD' },
+            { value: 'RWF', label: 'RWF' },
+          ]}
+          onChange={setCurrencyFilter}
+        />
+        {hasTableFilters && <ClearFiltersButton onClick={clearTableFilters} />}
+        <div className="ml-auto">
+          <ResultCount shown={visible.length} total={list.length} itemName="sponsorships" />
+        </div>
       </div>
 
       {/* Summary KPI Cards */}
@@ -219,12 +313,22 @@ export default function SponsorsTable() {
         <Table>
           <TableHeader>
             <TableRow className="bg-gray-50/75">
-              <TableHead className="font-semibold text-gray-700">Donor</TableHead>
-              <TableHead className="font-semibold text-gray-700">Child</TableHead>
-              <TableHead className="font-semibold text-gray-700">Plan</TableHead>
-              <TableHead className="font-semibold text-gray-700">Coverage Period</TableHead>
+              <TableHead className="font-semibold text-gray-700">
+                <SortableTh label="Donor" sortKey="donor" activeKey={sortKey} dir={sortDir} onSort={handleSort} />
+              </TableHead>
+              <TableHead className="font-semibold text-gray-700">
+                <SortableTh label="Child" sortKey="child" activeKey={sortKey} dir={sortDir} onSort={handleSort} />
+              </TableHead>
+              <TableHead className="font-semibold text-gray-700">
+                <SortableTh label="Plan" sortKey="amount" activeKey={sortKey} dir={sortDir} onSort={handleSort} />
+              </TableHead>
+              <TableHead className="font-semibold text-gray-700">
+                <SortableTh label="Coverage Period" sortKey="startedAt" activeKey={sortKey} dir={sortDir} onSort={handleSort} />
+              </TableHead>
               <TableHead className="font-semibold text-gray-700">Payment</TableHead>
-              <TableHead className="font-semibold text-gray-700">Status</TableHead>
+              <TableHead className="font-semibold text-gray-700">
+                <SortableTh label="Status" sortKey="status" activeKey={sortKey} dir={sortDir} onSort={handleSort} />
+              </TableHead>
               <TableHead className="font-semibold text-gray-700 text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -247,7 +351,7 @@ export default function SponsorsTable() {
                 <TableCell colSpan={7} className="text-center py-8 text-gray-500">
                   {list.length === 0
                     ? 'No sponsorship requests yet.'
-                    : 'No requests match your search or filter.'}
+                    : 'No requests match your search or filters.'}
                 </TableCell>
               </TableRow>
             ) : (

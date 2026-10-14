@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useTransition } from "react"
-import { Download, FileText, Pencil, Plus, Trash2 } from "lucide-react"
+import { useMemo, useState, useTransition } from "react"
+import { Download, FileText, Pencil, Plus, Search, Trash2 } from "lucide-react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -9,6 +9,13 @@ import { Field, FieldGroup } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { createReportAction, deleteReportAction, updateReportAction } from "@/app/actions/reports"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 type Report = {
   id: string
@@ -91,6 +98,8 @@ function ReportForm({ report, onSaved }: { report?: Report; onSaved: () => void 
 export function ReportManager({ initialReports }: { initialReports: Report[] }) {
   const [reports, setReports] = useState(initialReports)
   const [isDeleting, startDeleting] = useTransition()
+  const [search, setSearch] = useState("")
+  const [sort, setSort] = useState<"newest" | "oldest" | "title">("newest")
 
   const refresh = async () => {
     const response = await fetch("/api/admin/reports", { cache: "no-store" })
@@ -110,6 +119,16 @@ export function ReportManager({ initialReports }: { initialReports: Report[] }) 
     })
   }
 
+  const visible = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    const rows = reports.filter((r) => !q || r.title.toLowerCase().includes(q));
+    return [...rows].sort((a, b) => {
+      if (sort === "title") return a.title.localeCompare(b.title);
+      const diff = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+      return sort === "oldest" ? diff : -diff;
+    });
+  }, [reports, search, sort]);
+
   return (
     <div className="mx-auto w-full max-w-7xl space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -119,12 +138,40 @@ export function ReportManager({ initialReports }: { initialReports: Report[] }) 
         </div>
         <ReportForm onSaved={refresh} />
       </div>
-      {reports.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-gray-300 bg-white p-12 text-center text-gray-500">No reports have been uploaded yet.</div>
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+        <div className="relative w-full sm:w-80">
+          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search reports by title…"
+            aria-label="Search reports"
+            className="bg-white pl-9"
+          />
+        </div>
+        <Select value={sort} onValueChange={(v) => setSort(v as typeof sort)}>
+          <SelectTrigger size="sm" className="h-8 min-w-40 bg-white" aria-label="Sort reports">
+            <SelectValue placeholder="Sort" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="newest">Newest first</SelectItem>
+            <SelectItem value="oldest">Oldest first</SelectItem>
+            <SelectItem value="title">Title A–Z</SelectItem>
+          </SelectContent>
+        </Select>
+        <p className="text-xs text-muted-foreground sm:ml-auto" aria-live="polite">
+          Showing <span className="font-semibold text-foreground">{visible.length}</span> of{" "}
+          <span className="font-semibold text-foreground">{reports.length}</span> reports
+        </p>
+      </div>
+      {visible.length === 0 ? (
+        <div className="rounded-xl border border-dashed border-gray-300 bg-white p-12 text-center text-gray-500">
+          {reports.length === 0 ? "No reports have been uploaded yet." : "No reports match your search."}
+        </div>
       ) : (
         <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
           <div className="divide-y divide-gray-100">
-            {reports.map((report) => (
+            {visible.map((report) => (
               <div key={report.id} className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex min-w-0 items-center gap-3">
                   <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-yellow-50 text-yellow-700"><FileText className="size-5" /></div>
