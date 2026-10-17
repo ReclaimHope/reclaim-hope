@@ -7,6 +7,7 @@ import FeaturedChild, { ChildProfile } from "@/components/FeaturedChild";
 import SponsorHero from "@/components/SponsorHero";
 import SponsorshipSection from "@/components/SponsorshipSection";
 import useSWR from "swr";
+import { getPublicChildDisplayName } from "@/lib/child-name";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -34,7 +35,7 @@ function SponsorPageContent() {
         }
         return {
           id: c.id,
-          name: c.name || `${c.firstName} ${c.lastName}`.trim(),
+          name: getPublicChildDisplayName(c.firstName, c.lastName),
           age: Math.max(0, age),
           dream: c.dream,
           image: c.imageUrl || "/mentors_kids.jpg",
@@ -87,18 +88,16 @@ function SponsorPageContent() {
 
       {/* Featured Child Detail View */}
       <div ref={featuredRef} className="scroll-mt-10">
-        {isLoading ? (
-          <div className="py-16 text-center text-gray-500">Loading children...</div>
-        ) : selectedChild ? (
+        {!isLoading && selectedChild ? (
           <FeaturedChild child={toChildProfile(selectedChild)} />
-        ) : (
+        ) : !isLoading ? (
           <div className="mx-auto max-w-md px-4 py-16 text-center">
             <h2 className="text-2xl font-bold text-gray-900">No children listed yet</h2>
             <p className="mt-2 text-sm text-gray-600">
               There are currently no children available for sponsorship. Please check back soon.
             </p>
           </div>
-        )}
+        ) : null}
       </div>
 
       {/* Child Browsing Grid */}
@@ -106,6 +105,7 @@ function SponsorPageContent() {
         childrenList={childList}
         activeChildId={selectedChild?.id}
         onChildSelect={handleChildSelect}
+        isLoading={isLoading}
       />
 
       <SponsorshipSection />

@@ -1,6 +1,7 @@
 "use client"
 
 import { useMemo, useState, useTransition } from "react"
+import Image from "next/image"
 import { Pencil, Plus, Search, Trash2 } from "lucide-react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
@@ -235,7 +236,15 @@ export function NewsletterManager({ initialNewsletters }: { initialNewsletters: 
           {visible.map((newsletter) => (
             <article key={newsletter.id} className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
               {newsletter.imageUrl ? (
-                <img src={getImageSrc(newsletter.imageUrl)} alt="" className="h-48 w-full object-cover" />
+                <div className="relative h-48 w-full overflow-hidden">
+                  <Image
+                    src={getImageSrc(newsletter.imageUrl)}
+                    alt=""
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  />
+                </div>
               ) : (
                 <div className="flex h-48 items-center justify-center bg-gray-100 text-sm text-gray-500">No thumbnail</div>
               )}

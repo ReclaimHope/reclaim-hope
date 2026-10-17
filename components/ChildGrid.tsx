@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import ChildCard from "./ChildCard";
-import { Heart, Sparkles, UserCheck } from "lucide-react";
-
+import ChildSkeleton from "./ChildSkeleton";
+import { Heart, UserCheck } from "lucide-react";
 export interface ChildItem {
   id: string;
   name: string;
@@ -24,12 +24,14 @@ type ChildGridProps = {
   childrenList?: ChildItem[];
   onChildSelect?: (id: string) => void;
   activeChildId?: string;
+  isLoading?: boolean;
 };
 
 export default function ChildGrid({
   childrenList = [],
   onChildSelect,
   activeChildId,
+  isLoading = false,
 }: ChildGridProps) {
   const [filter, setFilter] = useState<'ALL' | 'AVAILABLE' | 'SPONSORED'>('ALL');
 
@@ -41,6 +43,69 @@ export default function ChildGrid({
 
   const availableCount = childrenList.filter((c) => !c.isSponsored).length;
   const sponsoredCount = childrenList.filter((c) => c.isSponsored).length;
+
+  // Show skeleton cards while loading
+  if (isLoading) {
+    return (
+      <section id="browse-children" className="w-full bg-[#f9fafb] py-24 px-6 md:px-16 border-t border-gray-100">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <p className="text-yellow-600 uppercase tracking-[0.3em] font-bold text-sm mb-3">
+              Browse Children
+            </p>
+            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight mb-4">
+              Meet the Children Waiting for Hope
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Choose a child to read their full story and start a life-changing sponsorship today.
+            </p>
+
+            {/* Filter Pills */}
+            <div className="flex flex-wrap items-center justify-center gap-2 mt-8">
+              <button
+                onClick={() => setFilter('ALL')}
+                className={`px-5 py-2.5 rounded-full text-sm font-semibold transition cursor-pointer ${
+                  filter === 'ALL'
+                    ? 'bg-gray-900 text-white shadow-sm'
+                    : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
+                }`}
+              >
+                All Children
+              </button>
+              <button
+                onClick={() => setFilter('AVAILABLE')}
+                className={`px-5 py-2.5 rounded-full text-sm font-semibold transition flex items-center gap-1.5 cursor-pointer ${
+                  filter === 'AVAILABLE'
+                    ? 'bg-yellow-500 text-white shadow-sm'
+                    : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
+                }`}
+              >
+                Available for Sponsorship
+              </button>
+              <button
+                onClick={() => setFilter('SPONSORED')}
+                className={`px-5 py-2.5 rounded-full text-sm font-semibold transition flex items-center gap-1.5 cursor-pointer ${
+                  filter === 'SPONSORED'
+                    ? 'bg-emerald-700 text-white shadow-sm'
+                    : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
+                }`}
+              >
+                <UserCheck className="w-4 h-4" />
+                Sponsored
+              </button>
+            </div>
+          </div>
+
+          {/* Loading Skeletons */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {[1, 2, 3, 4, 5, 6].map((_, i) => (
+              <ChildSkeleton key={i} />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="browse-children" className="w-full bg-[#f9fafb] py-24 px-6 md:px-16 border-t border-gray-100">
@@ -76,7 +141,6 @@ export default function ChildGrid({
                   : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
               }`}
             >
-              <Sparkles className="w-4 h-4" />
               Available for Sponsorship ({availableCount})
             </button>
             <button

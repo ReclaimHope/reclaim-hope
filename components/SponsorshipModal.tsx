@@ -11,7 +11,6 @@ import {
   ArrowRight,
   ArrowLeft,
   ShieldCheck,
-  Sparkles,
   X,
   User,
   Mail,
@@ -327,7 +326,7 @@ export default function SponsorshipModal({
           </div>
           <div className="absolute inset-x-0 bottom-0 space-y-4 p-7">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-400/20 px-3 py-1.5 text-xs font-semibold text-emerald-200 backdrop-blur-md">
-              <Sparkles className="size-3.5" /> 1-to-1 Match
+              1-to-1 Match
             </span>
             <p className="text-lg font-semibold text-white">
               {child.age} years old &middot; Dreams of becoming a {child.dream}

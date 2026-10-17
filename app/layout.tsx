@@ -17,6 +17,12 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const poppins = Poppins({
+  variable: "--font-poppins",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
 export const metadata: Metadata = {
   title: "Reclaim Hope Rwanda | Empowering Children Through Education & Care",
   description: "Join Reclaim Hope Rwanda in transforming lives through education, mentorship, and community support. Help underserved children in Rwanda build brighter futures through our comprehensive programs.",
@@ -140,7 +146,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} h-full antialiased`}
     >
       <head>
         <script
@@ -150,7 +156,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col font-sans">
         <AOSInit />
         <ConditionalNavFooter>
           {children}

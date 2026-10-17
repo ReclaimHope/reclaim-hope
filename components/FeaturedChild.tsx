@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { CheckCircle2, Heart, ShieldAlert, Sparkles, UserCheck } from "lucide-react";
+import { CheckCircle2, Heart, ShieldAlert, UserCheck } from "lucide-react";
 import SponsorshipModal from "./SponsorshipModal";
 
 export type ChildProfile = {
@@ -52,7 +52,6 @@ export default function FeaturedChild({ child }: FeaturedChildProps) {
                   </span>
                 ) : (
                   <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-emerald-600/90 backdrop-blur-md text-white text-sm font-semibold shadow-lg">
-                    <Sparkles className="w-4 h-4 text-yellow-300" />
                     Available for Sponsorship
                   </span>
                 )}

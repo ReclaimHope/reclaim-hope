@@ -3,6 +3,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { INITIAL_CHILDREN } from "@/lib/initial-children";
 import { getR2ObjectUrl } from "@/lib/r2";
+import { getPublicChildDisplayName } from "@/lib/child-name";
 
 interface TestimonialChild {
   id: string;
@@ -57,7 +58,7 @@ export default async function TestimonialSection() {
         );
         return {
           id: child.id,
-          name: `${child.firstName} ${child.lastName}`.trim(),
+          name: getPublicChildDisplayName(child.firstName, child.lastName),
           age: calculateAge(child.dateOfBirth),
           dream: child.dream,
           image: child.imageUrl ? getR2ObjectUrl(child.imageUrl) : "/mentors_kids.jpg",
@@ -70,7 +71,7 @@ export default async function TestimonialSection() {
   // Fallback to initial children if database has fewer than 3 records
   const fallbackList: TestimonialChild[] = INITIAL_CHILDREN.map((c) => ({
     id: c.id,
-    name: `${c.firstName} ${c.lastName}`.trim(),
+    name: getPublicChildDisplayName(c.firstName, c.lastName),
     age: calculateAge(c.dateOfBirth),
     dream: c.dream,
     image: c.imageUrl || "/mentors_kids.jpg",

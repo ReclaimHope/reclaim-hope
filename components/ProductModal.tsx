@@ -1,5 +1,6 @@
 'use client';
 
+import Image from "next/image";
 import React, { useState } from 'react';
 
 type Product = {
@@ -27,10 +28,15 @@ export default function ProductModal({ open, product, onClose }: { open: boolean
 
       <div className="relative bg-white rounded-xl shadow-xl max-w-2xl w-full mx-4 overflow-hidden">
         <div className="p-6 md:p-8 grid md:grid-cols-2 gap-6">
-          <div className="h-64 bg-gray-100 flex items-center justify-center rounded">
+          <div className="relative h-64 bg-gray-100 flex items-center justify-center rounded">
             {product.image ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={product.image} alt={product.title} className="object-cover h-full w-full" />
+              <Image
+                src={product.image}
+                alt={product.title}
+                fill
+                className="object-cover h-full w-full"
+                sizes="100vw"
+              />
             ) : (
               <div className="text-gray-500">No image</div>
             )}

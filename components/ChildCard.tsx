@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Sparkles, UserCheck } from "lucide-react";
+import { UserCheck } from "lucide-react";
 
 export type ChildCardProps = {
   id: string;
@@ -51,7 +51,6 @@ export default function ChildCard({
               </span>
             ) : (
               <span className="inline-flex items-center gap-1 text-xs font-semibold px-3 py-1 rounded-full bg-yellow-500/90 backdrop-blur-md text-white shadow-sm">
-                <Sparkles className="w-3 h-3 text-white" />
                 Available
               </span>
             )}

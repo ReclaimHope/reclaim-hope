@@ -1,3 +1,5 @@
+import Image from "next/image"
+
 export default function MediaFeaturedStory() {
   return (
     <section className="py-24 px-6 md:px-16">
@@ -6,10 +8,12 @@ export default function MediaFeaturedStory() {
         <div className="grid lg:grid-cols-2 overflow-hidden rounded-[40px] shadow-xl">
 
           <div className="relative min-h-[450px]">
-            <img
+            <Image
               src="/logo-transparent.png"
               alt="Featured Story"
+              fill
               className="w-full h-full object-cover"
+              sizes="100vw"
             />
           </div>
 

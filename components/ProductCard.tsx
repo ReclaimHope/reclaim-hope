@@ -1,5 +1,6 @@
 'use client';
 
+import Image from "next/image";
 import React from 'react';
 
 type Product = {
@@ -14,10 +15,15 @@ type Product = {
 export default function ProductCard({ product, onBuy }: { product: Product; onBuy: (p: Product) => void; }) {
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden flex flex-col">
-      <div className="h-48 bg-gray-800 flex items-center justify-center">
+      <div className="relative h-48 bg-gray-800 flex items-center justify-center">
         {product.image ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={product.image} alt={product.title} className="object-cover h-full w-full" />
+          <Image
+            src={product.image}
+            alt={product.title}
+            fill
+            className="object-cover h-full w-full"
+            sizes="100vw"
+          />
         ) : (
           <div className="text-gray-800">No image</div>
         )}

@@ -1,3 +1,5 @@
+import Image from "next/image"
+
 export default function MediaGallery() {
   return (
     <section className="py-24 px-6 md:px-16">
@@ -12,11 +14,15 @@ export default function MediaGallery() {
 
           {[1,2,3,4,5,6,7].map((item) => (
 
-            <img
+            <Image
               key={item}
               src={`/gallery/${item}.jpg`}
               alt=""
+              width={400}
+              height={400}
               className="mb-6 rounded-[24px] hover:scale-[1.02] transition cursor-pointer"
+              sizes="(max-width: 640px) 100vw, 50vw"
+              loading="lazy"
             />
 
           ))}
